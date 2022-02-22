@@ -1,0 +1,103 @@
+{
+  "company": {
+    "name": "Green Day",
+    "logo": "/assets/images/logo.jpg"
+  },
+  "navigation": [
+    {
+      "name": "Our Goal",
+      "href": "product"
+    },
+    {
+      "name": "Features",
+      "href": "features"
+    },
+    {
+      "name": "About",
+      "href": "about"
+    }
+  ],
+  "callToAction": {
+    "text": "Act Today",
+    "href": "#"
+  },
+  "mainHero": {
+    "title": "Green Day",
+    "subtitle": "RecycleMe Global",
+    "description": "We should write a description here but I am really not in the mood of writing it now.",
+    "img": "/assets/images/greenearth.jpg",
+    "primaryAction": {
+      "text": "Get started",
+      "href": "/home"
+    },
+    "secondaryAction": {
+      "text": "Email us",
+      "href": "mailto:nextchart.beachrock@gmail.com?subject=Green Day"
+    }
+  },
+  "product": {
+    "title": "Our Goal for Green Day",
+    "items": [
+      {
+        "title": "An Intro to Our Intention",
+        "description": "Description of our intention",
+        "img": "/assets/images/recycleLogo.jpg"
+      },
+      {
+        "title": "Our App",
+        "description": "Intro to our app",
+        "img": "/assets/images/RecycleMeUSA.jpg"
+      },
+      {
+        "title": "Google",
+        "description": "As our partner and main technology support, Google...",
+        "img": "/assets/images/GoogleImg.jpg"
+      }
+    ]
+  },
+  "features": {
+    "title": "Latest & Greatest ",
+    "subtitle": "We Used the Best Technologies",
+    "description": "Write a paragraph about the technologies we used and how we used them.",
+    "items": [
+      {
+        "name": "Google Maps",
+        "description": "Google Maps is a web mapping service developed by Google. It offers satellite imagery, aerial photography, street maps, 360 panoramic views of streets, real-time traffic conditions, and route planning for traveling by foot, car, bicycle and air, or public transportation.",
+        "icon": "/assets/images/googlemaps.png"
+      },
+      {
+        "name": "Firebase & Firestore",
+        "description": "Firebase is a platform developed by Google for creating mobile and web applications.",
+        "icon": "/assets/images/firebase.png"
+      },
+      {
+        "name": "Next.js",
+        "description": "Next.js is a framework for server-rendered React applications using Next.js.",
+        "icon": "/assets/images/nextjs.svg"
+      },
+      {
+        "name": "Typescript",
+        "description": "TypeScript is a programming language developed and maintained by Microsoft.",
+        "icon": "/assets/images/ts.png"
+      }
+    ]
+  },
+  "about": {
+    "sections": [
+      {
+        "name": "HOME",
+        "href": "/home",
+        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
+      },
+      {
+        "name": "MAP",
+        "href": "/map",
+        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
+      }
+    ],
+    "socialMedia": {
+      "github": "https://github.com/AJ-Wuu",
+      "linkedin": "https://www.linkedin.com/in/aijing-wu-7b01aa206/"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --color-primary: #00c400;
+  --color-secondary: #008900;
+  --color-tertiaty: #99a0a3;
+}
+
+a { 
+  @apply text-green-600;
+}
+
+a:hover {
+  @apply border-b-2 border-green-600;
+}
+
+.content p {
+  @apply my-6;
+}
+
+.content ul {
+  @apply my-6;
+}
