@@ -1,9 +1,31 @@
+import React, { useEffect } from "react";
+import { Loader } from '@googlemaps/js-api-loader';
 import { useTheme } from '@geist-ui/react';
 import router from 'next/router';
 import { useState } from 'react';
-import Map from '../map/map'
 import RecycledTypesList from '../RecycledTypes';
+import StyledMap from "../styles/map.css";
 
+type MarkerInfo = {
+  name: string;
+  recyclingTypes: string;
+  location: string;
+  pictureURL: string;
+  phone: string;
+  website: URL;
+  lat: number;
+  lng: number;
+}
+
+let map: google.maps.Map;
+const loader = new Loader({
+  apiKey: process.env.GOOGLE_API_KEY!,
+  version: 'weekly',
+});
+var state = {
+  defaultCenter: { lat: 39.87154121541584, lng: -102.955994347825 },
+  markers: require("../TestCases.json")
+}
 var address:string = "";
 var service:string = "";
 var recycledType:string = "";
@@ -12,6 +34,7 @@ const LoadMap = () => {
   const theme = useTheme();
   const [trashcanDisabled, setTrashCanDisabled] = useState<boolean>(false);
   const [recyclecenterDisabled, setRecycleCenterDisabled] = useState<boolean>(false);
+  const [gotMarkers, setGotMarkers] = useState<boolean>(false);
 
   const handleTrashCanDisabled = () => {
     if (trashcanDisabled === false) {
@@ -46,13 +69,111 @@ const LoadMap = () => {
     console.log(service);
     console.log(recycledType);
     handleCheckEmpty();
-    /*
-    setTimeout(() => {
-      setUpdateAddress(false);
-    }, 1000)
-    setUpdateAddress(true);
-    */
+    state.markers = require("../TestCases.json");
+    setGotMarkers(true);
   }
+
+  function handleAttachGoogleMap() {
+    if (gotMarkers) {
+      setTimeout(() => {
+        handleDrawMarkers(state.markers);
+      }, 2000);
+    }
+    else {
+      setTimeout(() => {
+        console.log("No Marker");
+      }, 2000);
+    }
+  };
+
+  function attachSecretMessage(marker: google.maps.Marker, secretMessage: MarkerInfo) {
+    const infowindow = new google.maps.InfoWindow({
+      content: 
+        "<p><b>" + secretMessage.name + "</b></p>" + 
+        "<p>recycling: <b>" + secretMessage.recyclingTypes + "</b></p>" + 
+        "<p>Address: <b>" + secretMessage.location + "</b></p>" + 
+        "<p>Phone: <b>" + secretMessage.phone + "</b></p>" + 
+        "<p>Website: <b><a href=" + secretMessage.website + ">" + secretMessage.website + "</b></p>" +
+        "<img src='" + secretMessage.pictureURL + "' width='200' height='100'>",
+      maxWidth: 300
+    });
+
+    marker.addListener("click", (event) => {
+      infowindow.open(marker.get("map"), marker);
+      map.setZoom(15);
+      map.setCenter(event.latLng);
+    });
+  }
+
+  function handleDrawMarkers(markers:any[]) {
+    const bounds = new google.maps.LatLngBounds();
+
+    markers.forEach((markerInfo:MarkerInfo) => {
+      const marker = new google.maps.Marker({
+        position: { lat: markerInfo.lat, lng: markerInfo.lng},
+        map,
+      });
+      bounds.extend(markerInfo);
+      attachSecretMessage(marker, markerInfo);
+    });
+
+    map.fitBounds(bounds);
+    map.panToBounds(bounds);
+  };
+
+  useEffect(() => {
+    setGotMarkers(false);
+    loader.load()
+      .then(() => {
+        const styledMapType = new google.maps.StyledMapType([
+          {
+            featureType: 'administrative',
+            elementType: 'geometry',
+            stylers: [{ visibility: 'off' }],
+          },
+          {
+            featureType: 'poi',
+            stylers: [{ visibility: 'off' }],
+          },
+          {
+            featureType: 'road',
+            elementType: 'labels.icon',
+            stylers: [{ visibility: 'off' }],
+          },
+          {
+            featureType: 'transit',
+            stylers: [{ visibility: 'off' }],
+          },
+        ],
+        { name: 'Styled Map' }
+      );
+
+      map = new google.maps.Map(
+        document.getElementById('google-map') as HTMLElement,
+        {
+          center: state.defaultCenter,
+          zoom: 4,
+          mapTypeControlOptions: {
+            mapTypeIds: [
+              'roadmap',
+              'satellite',
+              'hybrid',
+              'terrain',
+              'styled_map',
+            ],
+          },
+        }
+      );
+
+      map.mapTypes.set('styled_map', styledMapType);
+      map.setMapTypeId('styled_map');
+    })
+    .then(() => {
+      console.log(map);
+    });
+
+    handleAttachGoogleMap()
+  });
 
   return (
     <div>
@@ -99,7 +220,9 @@ const LoadMap = () => {
           </ion-menu>
           
           <ion-content id="main">
-            <Map></Map>
+            <StyledMap>
+              <div id="google-map" />
+            </StyledMap>
           </ion-content>
         </ion-split-pane>
       </div>

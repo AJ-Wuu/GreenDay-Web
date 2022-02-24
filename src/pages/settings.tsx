@@ -108,6 +108,7 @@ const Settings = () => {
 
   useEffect(() => {
     setShowDetails(false);
+    setUserInfoUpdate(false);
     onAuthStateChanged(auth, (aUser) => {
       console.log(`Auth state changes: ${aUser}`);
       setUser(aUser);

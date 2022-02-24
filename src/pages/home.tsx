@@ -8,16 +8,25 @@ import UserHeading from '../components/UserHeading';
 import Menu from '../components/navigation/menu';
 import { Grid, useTheme } from '@geist-ui/react';
 import PictureCard from '../components/PictureCard';
-import PictureList from '../PictureLists';
+
+var userVar:(User | null) = null;
 
 const Home = () => {
   const theme = useTheme();
   const auth = getAuth();
   const [user, setUser] = useState<User | null>(null);
+  const PictureList = require("../TestCases.json");
+
+  const handleGetAllPictures = async () => {
+    //let json = await getAllPics(true);
+    console.log("json");
+  }
 
   useEffect(() => {
     onAuthStateChanged(auth, (aUser) => {
       setUser(aUser);
+      userVar = aUser;
+      handleGetAllPictures();
     });
   }, [auth]);
 
@@ -30,11 +39,11 @@ const Home = () => {
         <div className="page__wrapper">
           <div className="page__content">
             <Grid.Container gap={2} marginTop={1} justify="flex-start">
-              {PictureList.map(({ pictureURL, pictureName }, i) => (
+              {PictureList.map(({ pictureURL, location }, i) => (
                 <Grid key={i} xs={24} sm={12} md={8}>
                 <PictureCard
                   pictureURL={pictureURL}
-                  pictureName={pictureName}
+                  pictureName={location}
                 />
               </Grid>
               ))}    
@@ -74,3 +83,7 @@ const Home = () => {
 };
 
 export default Home;
+
+export const currentUser = (): User => {
+  return userVar as User;
+};
