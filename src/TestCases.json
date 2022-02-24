@@ -1,0 +1,57 @@
+[
+  {
+    "name": "All Metals Recycling",
+    "pictureURL": "/assets/testGrid/AllMetalsRecycling.jpg",
+    "category": "RecyclingCenter",
+    "recyclingTypes": "metal",
+    "location": "1802 S Park St, Madison, WI 53713",
+    "phone": "608-255-0960",
+    "website": "https://www.allmetalsrecyclingllc.com/",
+    "lat": 43.04574659769402,
+    "lng": -89.39717810269876
+  },
+  {
+    "name": "Waste Management",
+    "pictureURL": "/assets/testGrid/WasteManagement.jpg",
+    "category": "RecyclingCenter",
+    "recyclingTypes": "paper,plastic",
+    "location": "2200 Fish Hatchery Rd, Madison, WI 53713",
+    "phone": "(608) 276-1200",
+    "website": "https://www.wm.com/",
+    "lat": 43.04232283221411,
+    "lng": -89.40428861619078
+  },
+  {
+    "name": "Trash Can",
+    "pictureURL": "/assets/testGrid/RegentStreet.jpg",
+    "category": "TrashCan",
+    "recyclingTypes": "compost",
+    "location": "Regent Street, Madison, WI",
+    "phone": "",
+    "website": "",
+    "lat": 43.06824690153782,
+    "lng": -89.4370450603699
+  },
+  {
+    "name": "Trash Can",
+    "pictureURL": "/assets/testGrid/SpringStreet.jpg",
+    "category": "TrashCan",
+    "recyclingTypes": "compost",
+    "location": "Spring Street, Madison, WI",
+    "phone": "",
+    "website": "",
+    "lat": 43.06978278318962,
+    "lng": -89.40536481804186
+  },
+  {
+    "name": "Trash Can",
+    "pictureURL": "/assets/testGrid/UniversityAvenue.jpg",
+    "category": "TrashCan",
+    "recyclingTypes": "plastic",
+    "location": "University Avenue, Madison, WI",
+    "phone": "",
+    "website": "",
+    "lat": 43.08027192367503,
+    "lng": -89.47250360269739
+  }
+]
