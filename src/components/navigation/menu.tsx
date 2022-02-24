@@ -78,8 +78,7 @@ const Menu: React.FC = () => {
             auto
             type="abort"
             onClick={switchThemes}
-          >
-            {theme.type === 'dark' ? <Icons.Sun size={16} /> : <Icons.Moon size={16} />}
+          >{theme.type === 'dark' ? <Icons.Sun size={16} /> : <Icons.Moon size={16} />}
           </Button>
           <Button
             id="login-button"
