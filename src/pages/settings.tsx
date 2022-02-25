@@ -18,6 +18,7 @@ Geocode.setApiKey(process.env.GEOCODE_API_KEY!);
 
 let avatarSrc: string = "";
 var userDetails = {
+  name: '',
   phone: '',
   street: '',
   city: '',
@@ -87,6 +88,7 @@ const Settings = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
+      userDetails.name = data.name;
       userDetails.phone = data.phone;
       userDetails.street = data.street;
       userDetails.city = data.city;
@@ -143,6 +145,7 @@ const Settings = () => {
               
                   {showDetails && <div className='heading__info'>
                     <Text h5 className='heading__user-info'>
+                      Name: {userDetails.name}<br></br>
                       Email: {user.email}<br></br>
                       Phone: {userDetails.phone}<br></br>
                       Address: {userDetails.address}<br></br>
@@ -181,6 +184,19 @@ const Settings = () => {
               </ion-item>
               <ion-card-content>
                 <ion-item>
+                  <ion-label class="ion-text-wrap" color="primary">
+                    Name:{' '}
+                  </ion-label>
+                  <ion-input
+                    type="text"
+                    required={true}
+                    value={userDetails.name}
+                    onBlur={(e) =>
+                      (userDetails.name = (
+                        e.target as HTMLInputElement
+                      ).value)
+                    }
+                  ></ion-input>
                   <ion-label class="ion-text-wrap" color="primary">
                     Phone:{' '}
                   </ion-label>
