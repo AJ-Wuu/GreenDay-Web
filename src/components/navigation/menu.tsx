@@ -13,11 +13,12 @@ import {
 } from 'firebase/auth';
 import router from 'next/router';
 
+var userVar:(User | null) = null;
+
 const Menu: React.FC = () => {
   const theme = useTheme();
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
-  const [, setUser] = useState<User | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [themeType, setThemeType] = useState('light')
   
@@ -31,7 +32,7 @@ const Menu: React.FC = () => {
           const credential: OAuthCredential | null =
             GoogleAuthProvider.credentialFromResult(result);
           if (credential) {
-            setUser(result.user);
+            userVar = result.user;
             setLoggedIn(true);
           }
         })
@@ -45,7 +46,7 @@ const Menu: React.FC = () => {
   const handleSignOutRequest = () => {
       signOut(auth)
         .then(() => {
-          setUser(null);
+          userVar = null;
           setLoggedIn(false);
         })
         .catch((error) => {
@@ -55,7 +56,7 @@ const Menu: React.FC = () => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (aUser) => {
-      setUser(aUser);
+      userVar = aUser;
       if (aUser) {
         setLoggedIn(true);
       }
@@ -137,3 +138,7 @@ const Menu: React.FC = () => {
 };
 
 export default Menu;
+
+export const currentUser = (): User => {
+  return userVar as User;
+};
