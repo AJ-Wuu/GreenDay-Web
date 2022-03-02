@@ -26,13 +26,13 @@ const Heading: React.FC<HeadingProps> = ({ user }) => {
               <div className="heading__actions">
                 <NextLink href="/map" passHref>
                   <Button type="success" auto>
-                    Search Recycling
+                    Search Map
                   </Button>
                 </NextLink>
                 <h5></h5>
-                <NextLink href="/gallery" passHref>
+                <NextLink href="/settings" passHref>
                   <Button type="success" auto>
-                    Add Your Pictures
+                    Add Your Business
                   </Button>
                 </NextLink>
               </div>
