@@ -9,8 +9,6 @@ import Menu from '../components/navigation/menu';
 import { Grid, useTheme } from '@geist-ui/react';
 import PictureCard from '../components/PictureCard';
 
-var userVar:(User | null) = null;
-
 const Home = () => {
   const theme = useTheme();
   const auth = getAuth();
@@ -25,7 +23,6 @@ const Home = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (aUser) => {
       setUser(aUser);
-      userVar = aUser;
       handleGetAllPictures();
     });
   }, [auth]);
@@ -83,7 +80,3 @@ const Home = () => {
 };
 
 export default Home;
-
-export const currentUser = (): User => {
-  return userVar as User;
-};

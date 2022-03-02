@@ -3,9 +3,9 @@ import { Avatar, Button, Text, useTheme } from '@geist-ui/react';
 import {
   getAuth,
   User,
-  onAuthStateChanged,
+  onAuthStateChanged
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import Router from 'next/router';
 import Geocode from 'react-geocode';
@@ -13,13 +13,33 @@ import Geocode from 'react-geocode';
 import db from '../firebase.config';
 import RecycledTypesList from '../RecycledTypes';
 import Menu from '../components/navigation/menu';
+import { createBusiness, deleteBusiness, getBusinessData, updateBusiness } from './api/backend';
 
 Geocode.setApiKey(process.env.GEOCODE_API_KEY!);
 
+type business_data = {
+  name: string,
+  pictureURL: string,
+  category: string,
+  recyclingTypes: string,
+  location: string,
+  street: string,
+  city: string,
+  county: string,
+  state: string,
+  zipcode: string,
+  phone: string;
+  website: string,
+  timeAvailability: string,
+  lat: number,
+  lng: number
+}
+
 let avatarSrc: string = "";
-var userDetails = {
+var userDetails:business_data = {
   name: '',
   phone: '',
+  category: 'RecyclingCenter',
   street: '',
   city: '',
   county: '',
@@ -27,15 +47,15 @@ var userDetails = {
   zipcode: '',
   lat: 0,
   lng: 0,
-  address: '',
+  location: '',
   timeAvailability: '',
+  pictureURL: "404",
   website: '',
-  recycledType: ''
+  recyclingTypes: ''
 };
 
 const Settings = () => {
   const auth = getAuth();
-  const collection = 'business';
   const theme = useTheme();
   const [user, setUser] = useState<User | null>(null);
   const [userInfoUpdate, setUserInfoUpdate] = useState<boolean>(false);
@@ -44,6 +64,28 @@ const Settings = () => {
   const handleTriggerUpdate = () => {
     setUserInfoUpdate(true);
   };
+
+  const handleDeleteCurrentBusiness = async () => {
+    await deleteBusiness().then((response) => {
+      if (response.success === undefined) {
+        window.alert("Your business has been deleted. You might not delete it again.")
+      }
+      else {
+        if (confirm("Business deleted successfully. You could recreate a business or explore this platform without one.")) {
+          Router.reload();
+        }
+      }
+    })
+  }
+
+  const handleTriggerDelete = () => {
+    if (confirm("Are you sure to delete all the information of your current business?")) {
+      handleDeleteCurrentBusiness();
+    }
+    else {
+      console.log("Business Deletion Cancelled");
+    }
+  }
 
   const handleLatLng = async (address:string) => {
     await Geocode.fromAddress(address).then(
@@ -71,15 +113,35 @@ const Settings = () => {
   };
 
   const handleSubmit = async () => {
-    userDetails.address = `${userDetails.street}, ${userDetails.city}, ${userDetails.state} ${userDetails.zipcode}`;
-    console.log(userDetails.address);
-    handleLatLng(userDetails.address).then(async () => {
-      await setDoc(doc(db, collection, user!.uid), userDetails)
+    userDetails.location = `${userDetails.street}, ${userDetails.city}, ${userDetails.state} ${userDetails.zipcode}`;
+    handleLatLng(userDetails.location).then(async () => {
+      await getBusinessData(user?.getIdToken()).then((data) => {
+        console.log(data);
+        if (data.success === undefined) { //return error
+          console.log("Create Business");
+          return createBusiness(userDetails);
+        }
+        else {
+          console.log("Update Business");
+          return updateBusiness(userDetails);
+        }
+      }).then((response) => {
+        if (response.success === undefined) {
+          window.alert("Woops, something goes wrong. Please try again later.")
+        }
+        else {
+          Router.reload();
+        }
+      })
+      /*
+      //deprecated - direct firestore update
+      await setDoc(doc(db, 'business', user!.uid), userDetails)
         .then(() => {
             Router.reload();
         }).catch(error => {
             alert(error);
         });
+      */
     })
   };
 
@@ -88,6 +150,8 @@ const Settings = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
+      console.log(user.uid.toString());
+      console.log(data);
       userDetails.name = data.name;
       userDetails.phone = data.phone;
       userDetails.street = data.street;
@@ -95,12 +159,13 @@ const Settings = () => {
       userDetails.county = data.county;
       userDetails.state = data.state;
       userDetails.zipcode = data.zipcode;
+      userDetails.pictureURL = data.pictureURL;
       userDetails.lat = data.lat;
       userDetails.lng = data.lng;
-      userDetails.address = data.address;
+      userDetails.location = data.location;
       userDetails.timeAvailability = data.timeAvailability;
       userDetails.website = data.website;
-      userDetails.recycledType = data.recycledType;
+      userDetails.recyclingTypes = data.recycledType;
       console.log(userDetails);
     }
     else {
@@ -148,19 +213,23 @@ const Settings = () => {
                       Name: {userDetails.name}<br></br>
                       Email: {user.email}<br></br>
                       Phone: {userDetails.phone}<br></br>
-                      Address: {userDetails.address}<br></br>
+                      Address: {userDetails.location}<br></br>
                       Time Availability: {userDetails.timeAvailability}<br></br>
                       Website:{' '}
                         <Link href={userDetails.website!} passHref={true}>
                           {userDetails.website.toString()}
                         </Link><br></br>
-                      Recycled Type: {userDetails.recycledType}<br></br>
+                      Recycled Type: {userDetails.recyclingTypes}<br></br>
                     </Text>
                   </div>}
 
                   <div className="heading__actions">
                     <Button type="success" auto onClick={handleTriggerUpdate}>
-                      Update Info
+                      Update Business Info
+                    </Button>
+                    <h5></h5>
+                    <Button type="success" auto onClick={handleTriggerDelete}>
+                      Delete Current Business
                     </Button>
                   </div>
                 </div>
@@ -294,7 +363,7 @@ const Settings = () => {
                     cancelText="Cancel"
                     okText="Okay"
                     onBlur={(e) => {
-                      userDetails.recycledType = (
+                      userDetails.recyclingTypes = (
                         e.target as HTMLInputElement
                       ).value?.toString();
                     }}>

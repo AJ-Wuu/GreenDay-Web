@@ -4,6 +4,7 @@ import Menu from "../components/navigation/menu";
 import { useTheme } from "@geist-ui/react";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { addImg } from "./api/backend";
 
 const useStyles = makeStyles(() => createStyles({
     previewChip: {
@@ -12,12 +13,19 @@ const useStyles = makeStyles(() => createStyles({
     },
 }));
 
+var address:string;
+var picture:File;
+
 const Gallery = () => {
   const auth = getAuth();
   const theme = useTheme();
   const classes = useStyles();
   const json = require("../TestCases.json");
   const [user, setUser] = useState<User | null>(null);
+
+  const uploadNewPic = async () => {
+    await addImg(address, picture);
+  }
 
   useEffect(() => {
     onAuthStateChanged(auth, (aUser) => {
@@ -43,8 +51,8 @@ const Gallery = () => {
           <h4>Upload picture with detailed address to help more!</h4>
           <ion-item>
             <ion-label>Address: </ion-label>
-            <ion-input></ion-input>
-            <ion-button>Submit</ion-button>
+            <ion-input onBlur={(e) => address = (e.target as HTMLInputElement).value}></ion-input>
+            <ion-button onClick={uploadNewPic}>Submit</ion-button>
           </ion-item>
           <DropzoneArea
             acceptedFiles={['image/*']}
@@ -53,7 +61,7 @@ const Gallery = () => {
             previewGridProps={{container: { spacing: 1, direction: 'row' }}}
             previewChipProps={{classes: { root: classes.previewChip } }}
             previewText="Selected files"
-            onChange={(files) => console.log('Files:', files)}
+            onChange={file => picture = file[0]!}
           />
         </ion-col>
       </ion-row>

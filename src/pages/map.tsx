@@ -1,10 +1,15 @@
 import React, { useEffect } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { useTheme } from '@geist-ui/react';
-import router from 'next/router';
+import Router from 'next/router';
 import { useState } from 'react';
 import RecycledTypesList from '../RecycledTypes';
 import StyledMap from "../styles/map.css";
+import Geocode from 'react-geocode';
+import { getBusinessData, queryBusinessIDs } from "./api/backend";
+import router from "next/router";
+
+Geocode.setApiKey(process.env.GEOCODE_API_KEY!);
 
 type MarkerInfo = {
   name: string;
@@ -22,13 +27,16 @@ const loader = new Loader({
   apiKey: process.env.GOOGLE_API_KEY!,
   version: 'weekly',
 });
+var varMarkers:MarkerInfo[] = [];
 var state = {
   defaultCenter: { lat: 39.87154121541584, lng: -102.955994347825 },
-  markers: require("../TestCases.json")
+  markers: varMarkers
 }
 var address:string = "";
 var service:string = "";
 var recycledType:string = "";
+var userLat:number;
+var userLng:number;
 
 const LoadMap = () => {
   const theme = useTheme();
@@ -64,24 +72,63 @@ const LoadMap = () => {
     }
   }
 
+  const handleLatLng = async (address:string) => {
+    await Geocode.fromAddress(address).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+        userLat = lat;
+        userLng = lng;
+      },
+      (error) => {
+        console.error(error);
+        if (confirm("Ah oh, something goes wrong. Please try again later.")) {
+          Router.reload();
+        }
+      }
+    );
+  }
+
   const handleSearch = () => {
     console.log(address);
     console.log(service);
     console.log(recycledType);
     handleCheckEmpty();
-    state.markers = require("../TestCases.json");
-    setGotMarkers(true);
+    if (address !== '' && address !== undefined) {
+      handleLatLng(address).then(async () => {
+        await queryBusinessIDs(userLat, userLng).then((businessIDs) => {
+          if (businessIDs.success === undefined || businessIDs.success.length === 0) {
+            if (confirm("Sorry, there is no recycling center near this location now. Be the first one by entering yours!")) {
+              Router.reload();
+            }
+          }
+          else {
+            businessIDs.success.forEach(async (businessID) => {
+              await getBusinessData(businessID).then((businessData) => {
+                let currMarker:MarkerInfo = {
+                  name: businessData.success.name,
+                  recyclingTypes: businessData.success.recyclingTypes,
+                  location: businessData.success.location,
+                  pictureURL: businessData.success.pictureURL,
+                  phone: businessData.success.phone,
+                  website: new URL("https://www.google.com"),
+                  lat: businessData.success.lat,
+                  lng: businessData.success.lng
+                }
+                console.log(currMarker);
+                state.markers.push(currMarker);
+              });
+            })
+            setGotMarkers(true);
+          }
+        })
+      })
+    }
   }
 
   function handleAttachGoogleMap() {
     if (gotMarkers) {
       setTimeout(() => {
         handleDrawMarkers(state.markers);
-      }, 2000);
-    }
-    else {
-      setTimeout(() => {
-        console.log("No Marker");
       }, 2000);
     }
   };
