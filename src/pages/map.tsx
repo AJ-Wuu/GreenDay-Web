@@ -193,10 +193,10 @@ const LoadMap = () => {
         <ion-header class="ion-no-border">
           <ion-toolbar>
             <ion-item>
-              <ion-button size="default" shape="round" onClick={() => router.push("/home")}>Back Home</ion-button>
+              <ion-button size="default" shape="round" color="warning" onClick={() => router.push("/home")}>Back Home</ion-button>
               <ion-searchbar placeholder="Enter Your Location..." onBlur={e => address = (e.target as HTMLInputElement).value}></ion-searchbar>         
-              <ion-button size="default" onClick={handleSearchBusiness}>Trash Can</ion-button>
-              <ion-button size="default" onClick={handleSearchBusiness}>Recycling Center</ion-button>
+              <ion-button size="default" shape="round" color="tertiary" onClick={handleSearchBusiness}>Trash Can</ion-button>
+              <ion-button size="default" shape="round" color="tertiary" onClick={handleSearchBusiness}>Recycling Center</ion-button>
             </ion-item>
           </ion-toolbar>
         </ion-header>
