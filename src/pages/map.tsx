@@ -3,7 +3,6 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { useTheme } from '@geist-ui/react';
 import Router from 'next/router';
 import { useState } from 'react';
-import RecycledTypesList from '../RecycledTypes';
 import StyledMap from "../styles/map.css";
 import Geocode from 'react-geocode';
 import { getBusinessData, queryBusinessIDs } from "./api/backend";
@@ -33,44 +32,12 @@ var state = {
   markers: varMarkers
 }
 var address:string = "";
-var service:string = "";
-var recycledType:string = "";
 var userLat:number;
 var userLng:number;
 
 const LoadMap = () => {
   const theme = useTheme();
-  const [trashcanDisabled, setTrashCanDisabled] = useState<boolean>(false);
-  const [recyclecenterDisabled, setRecycleCenterDisabled] = useState<boolean>(false);
   const [gotMarkers, setGotMarkers] = useState<boolean>(false);
-
-  const handleTrashCanDisabled = () => {
-    if (trashcanDisabled === false) {
-      setTrashCanDisabled(true);
-      service = "RecycleCenter"
-    }
-    else {
-      setTrashCanDisabled(false);
-      service = "";
-    }
-  }
-
-  const handleRecycleCenterDisabled = () => {
-    if (recyclecenterDisabled === false) {
-      setRecycleCenterDisabled(true);
-      service = "TrashCan";
-    }
-    else {
-      setRecycleCenterDisabled(false);
-      service = "";
-    }
-  }
-
-  const handleCheckEmpty = () => {
-    if (address === "" || service === "" || recycledType === "") {
-      alert("Please fill in all blanks.");
-    }
-  }
 
   const handleLatLng = async (address:string) => {
     await Geocode.fromAddress(address).then(
@@ -88,11 +55,7 @@ const LoadMap = () => {
     );
   }
 
-  const handleSearch = () => {
-    console.log(address);
-    console.log(service);
-    console.log(recycledType);
-    handleCheckEmpty();
+  const handleSearchBusiness = () => {
     if (address !== '' && address !== undefined) {
       handleLatLng(address).then(async () => {
         await queryBusinessIDs(userLat, userLng).then((businessIDs) => {
@@ -110,11 +73,10 @@ const LoadMap = () => {
                   location: businessData.success.location,
                   pictureURL: businessData.success.pictureURL,
                   phone: businessData.success.phone,
-                  website: new URL("https://www.google.com"),
+                  website: new URL(businessData.success.website),
                   lat: businessData.success.lat,
                   lng: businessData.success.lng
                 }
-                console.log(currMarker);
                 state.markers.push(currMarker);
               });
             })
@@ -122,6 +84,9 @@ const LoadMap = () => {
           }
         })
       })
+    }
+    else {
+      window.alert("Please enter your location.");
     }
   }
 
@@ -223,55 +188,21 @@ const LoadMap = () => {
   });
 
   return (
-    <div>
+    <>
       <div>
-        <ion-split-pane content-id="main">
-          <ion-menu content-id="main">
-            <ion-header>
-              <ion-toolbar>
-                <ion-item>
-                  <ion-title>Map Menu</ion-title>
-                  <ion-button onClick={() => router.push("/home")}>Back Home</ion-button>
-                </ion-item>
-              </ion-toolbar>
-            </ion-header>
-            <ion-searchbar placeholder="Enter Your Location..." onKeyUp={e => address = (e.target as HTMLInputElement).value}></ion-searchbar>
-            <ion-list>
-              <ion-label color="primary">Service</ion-label>
-              <ion-item>
-                <ion-label>Trash Can</ion-label>
-                <ion-checkbox slot="end" value="trashcan" disabled={trashcanDisabled} onClick={handleRecycleCenterDisabled}></ion-checkbox>
-              </ion-item>
-              <ion-item>
-                <ion-label>Recycle Center</ion-label>
-                <ion-checkbox slot="end" value="recyclecenter" disabled={recyclecenterDisabled} onClick={handleTrashCanDisabled}></ion-checkbox>
-              </ion-item>
-            </ion-list>
-            <ion-list>
-              <ion-label color="primary">Recycle Type(s)</ion-label>
-              <ion-select
-                multiple={true}
-                cancelText="Cancel"
-                okText="Okay"
-                onBlur={(e) => {
-                  recycledType = (
-                    e.target as HTMLInputElement
-                  ).value?.toString();
-                }}>
-                {RecycledTypesList.map(({ val }, i) => (
-                  <ion-select-option key={i}>{val}</ion-select-option>
-                ))};
-              </ion-select>
-            </ion-list>
-            <ion-button size='default' onClick={handleSearch}>GO</ion-button>
-          </ion-menu>
-          
-          <ion-content id="main">
-            <StyledMap>
-              <div id="google-map" />
-            </StyledMap>
-          </ion-content>
-        </ion-split-pane>
+        <ion-header class="ion-no-border">
+          <ion-toolbar>
+            <ion-item>
+              <ion-button size="default" onClick={() => router.push("/home")}>Back Home</ion-button>
+              <ion-searchbar placeholder="Enter Your Location..." onBlur={e => address = (e.target as HTMLInputElement).value}></ion-searchbar>         
+              <ion-button size='default' onClick={handleSearchBusiness}>Trash Can</ion-button>
+              <ion-button size='default' onClick={handleSearchBusiness}>Recycling Center</ion-button>
+            </ion-item>
+          </ion-toolbar>
+        </ion-header>
+        <StyledMap>
+          <div id="google-map" />
+        </StyledMap>
       </div>
       <style jsx>{`
         #search-bar {
@@ -313,7 +244,7 @@ const LoadMap = () => {
           font-size: 14px;
         }
       `}</style>
-    </div>
+    </>
   )
 }
 

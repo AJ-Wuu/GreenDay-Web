@@ -36,6 +36,7 @@ type business_data = {
 }
 
 let avatarSrc: string = "";
+let otherTypes: string = "";
 var userDetails:business_data = {
   name: '',
   phone: '',
@@ -102,6 +103,7 @@ const Settings = () => {
     );
     await Geocode.fromLatLng(userDetails.lat.toString(),userDetails.lng.toString()).then(
       (response) => {
+        userDetails.location = response.results[0].formatted_address;
         const county = response.results[0].address_components[3].long_name;
         userDetails.county = county;
         console.log(userDetails.county);
@@ -114,6 +116,10 @@ const Settings = () => {
 
   const handleSubmit = async () => {
     userDetails.location = `${userDetails.street}, ${userDetails.city}, ${userDetails.state} ${userDetails.zipcode}`;
+    if (otherTypes !== "") {
+      userDetails.recyclingTypes = `${userDetails.recyclingTypes},${otherTypes}`;
+      console.log(userDetails.recyclingTypes);
+    }
     handleLatLng(userDetails.location).then(async () => {
       await getBusinessData(user?.getIdToken()).then((data) => {
         console.log(data);
@@ -165,7 +171,7 @@ const Settings = () => {
       userDetails.location = data.location;
       userDetails.timeAvailability = data.timeAvailability;
       userDetails.website = data.website;
-      userDetails.recyclingTypes = data.recycledType;
+      userDetails.recyclingTypes = data.recyclingTypes;
       console.log(userDetails);
     }
     else {
@@ -219,7 +225,7 @@ const Settings = () => {
                         <Link href={userDetails.website!} passHref={true}>
                           {userDetails.website.toString()}
                         </Link><br></br>
-                      Recycled Type: {userDetails.recyclingTypes}<br></br>
+                      Recycling Types: {userDetails.recyclingTypes}<br></br>
                     </Text>
                   </div>}
 
@@ -342,6 +348,23 @@ const Settings = () => {
                   ></ion-input>
                 </ion-item>
                 <ion-item>
+                  <ion-label class='recyclingTypesLabel' color="primary">Recycling Type(s): </ion-label>
+                  <ion-select
+                    class='recyclingTypesSelect'
+                    multiple={true}
+                    cancelText="Cancel"
+                    okText="Okay"
+                    onBlur={(e) => {
+                      userDetails.recyclingTypes = (
+                        e.target as HTMLInputElement
+                      ).value?.toString();
+                    }}>
+                    {RecycledTypesList.map(({ val }, i) => (
+                      <ion-select-option key={i}>{val}</ion-select-option>
+                    ))};
+                  </ion-select>
+                </ion-item>
+                <ion-item>
                   <ion-label class="ion-text-wrap" color="primary" placeholder='e.g. MTWRF 9am - 5pm'>
                     Time Availability:{' '}
                   </ion-label>
@@ -355,22 +378,8 @@ const Settings = () => {
                       ).value)
                     }
                   ></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label color="primary">Recycled Type(s)</ion-label>
-                  <ion-select
-                    multiple={true}
-                    cancelText="Cancel"
-                    okText="Okay"
-                    onBlur={(e) => {
-                      userDetails.recyclingTypes = (
-                        e.target as HTMLInputElement
-                      ).value?.toString();
-                    }}>
-                    {RecycledTypesList.map(({ val }, i) => (
-                      <ion-select-option key={i}>{val}</ion-select-option>
-                    ))};
-                  </ion-select>
+                  <ion-label color='primary'>Other Type(s): </ion-label>
+                  <ion-input onBlur={e => otherTypes = (e.target as HTMLInputElement).value}></ion-input>
                 </ion-item>
               </ion-card-content>
             </ion-card>
