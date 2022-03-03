@@ -24,7 +24,7 @@
   "mainHero": {
     "title": "Green Day",
     "subtitle": "RecycleMe Global",
-    "description": "We should write a description here but I am really not in the mood of writing it now.",
+    "description": "Heyヾ(≧▽≦*)o Welcome to our website for a new Green Day. Scroll down for the introduction of this project or Click the menu above to start your journey!",
     "img": "/assets/images/greenearth.jpg",
     "primaryAction": {
       "text": "Get started",
@@ -39,46 +39,51 @@
     "title": "Our Goal for Green Day",
     "items": [
       {
-        "title": "An Intro to Our Intention",
-        "description": "Description of our intention",
-        "img": "/assets/images/recycleLogo.jpg"
+        "title": "Our Motivation",
+        "description": "Have you ever experienced that you would like to recycle your stuff but cannot find the correct place for it? We did.\nWith this application and platform, our goal is simple: offering you enough information with minimal effort to finish your recycling. We hope this will ease the difficulty of recycling in daily lives and encourage more people to join in recycling.",
+        "img": "/assets/images/recycleLogo.png"
       },
       {
-        "title": "Our App",
-        "description": "Intro to our app",
+        "title": "Check Out the Phone App: RecycleMe USA",
+        "description": "We have a phone app for this! It is extremely convenient for users to take pictures, identify the recycling type of your item, and find the nearest place to put it. Check it out now in Google Play.",
         "img": "/assets/images/RecycleMeUSA.jpg"
       },
       {
         "title": "Google",
-        "description": "As our partner and main technology support, Google...",
+        "description": "As the main provider for the technologies we are using, Google is diligent in making the world and the environment around us a better place. At Google, people remain committed to sustainability and continue to lead and encourage others to join in improving the health of our planet.",
         "img": "/assets/images/GoogleImg.jpg"
+      },
+      {
+        "title": "Contribute to Your Community",
+        "description": "Here is your opportunity! We manage our database dynamically, so there is a good chance for your pictures to be shown to all people in your district. Open our app now and take your first recycling picture :D",
+        "img": "/assets/images/community.jpg"
       }
     ]
   },
   "features": {
     "title": "Latest & Greatest ",
     "subtitle": "We Used the Best Technologies",
-    "description": "Write a paragraph about the technologies we used and how we used them.",
+    "description": "",
     "items": [
       {
         "name": "Google Maps",
-        "description": "Google Maps is a web mapping service developed by Google. It offers satellite imagery, aerial photography, street maps, 360 panoramic views of streets, real-time traffic conditions, and route planning for traveling by foot, car, bicycle and air, or public transportation.",
+        "description": "Map and Geocoding are our friends during the implementation. By making use of their strong functionalities, we manage to visually display the positions of recycling centers and trash cans, and keep all user updates aligning closely for our database’s self-sustainiblity.",
         "icon": "/assets/images/googlemaps.png"
       },
       {
         "name": "Firebase & Firestore",
-        "description": "Firebase is a platform developed by Google for creating mobile and web applications.",
+        "description": "Here comes our database for informational data. Firebase brings all your data absolutely portable, so be sure to log in to your account and enjoy this platform everywhere. We also speed up the search function with the help of Firestore.",
         "icon": "/assets/images/firebase.png"
       },
       {
-        "name": "Next.js",
-        "description": "Next.js is a framework for server-rendered React applications using Next.js.",
-        "icon": "/assets/images/nextjs.svg"
+        "name": "Google Cloud",
+        "description": "Cloud Run, Cloud Vision, Cloud Storage, and more! All our machine learning models and all the user pictures are here.",
+        "icon": "/assets/images/googlecloud.png"
       },
       {
-        "name": "Typescript",
-        "description": "TypeScript is a programming language developed and maintained by Microsoft.",
-        "icon": "/assets/images/ts.png"
+        "name": "React",
+        "description": "Declarative, Efficient, and Flexible. We use React Native for the phone app and Next.js for the website.",
+        "icon": "/assets/images/react.jpg"
       }
     ]
   },
@@ -87,12 +92,12 @@
       {
         "name": "HOME",
         "href": "/home",
-        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
+        "content": ""
       },
       {
         "name": "MAP",
         "href": "/map",
-        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
+        "content": ""
       }
     ],
     "socialMedia": {
