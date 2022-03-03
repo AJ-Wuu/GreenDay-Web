@@ -172,10 +172,8 @@ const LoadMap = () => {
       });
     }
 
-    marker.addListener("click", (event) => {
+    marker.addListener("click", () => {
       infowindow.open(marker.get("map"), marker);
-      map.setZoom(15);
-      map.setCenter(event.latLng);
     });
   }
 
