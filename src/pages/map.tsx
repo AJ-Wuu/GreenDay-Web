@@ -1,22 +1,22 @@
 import React, { useEffect } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { useTheme } from '@geist-ui/react';
-import Router from 'next/router';
 import { useState } from 'react';
 import StyledMap from "../styles/map.css";
 import Geocode from 'react-geocode';
-import { getBusinessData, queryBusinessIDs } from "./api/backend";
+import { getBusinessData, getTrashCanData, getTrashCanImage, queryBusinessIDs, queryTrashCanLocations } from "./api/backend";
 import router from "next/router";
 
 Geocode.setApiKey(process.env.GEOCODE_API_KEY!);
 
 type MarkerInfo = {
   name: string;
-  recyclingTypes: string;
+  recyclingTypes: string | URL;
   location: string;
   pictureURL: string;
   phone: string;
-  website: URL;
+  website: URL | string;
+  category: string;
   lat: number;
   lng: number;
 }
@@ -49,22 +49,72 @@ const LoadMap = () => {
       (error) => {
         console.error(error);
         if (confirm("Ah oh, something goes wrong. Please try again later.")) {
-          Router.reload();
+          router.push("/home");
         }
       }
     );
   }
 
+  const handleSearchTrashCan = () => {
+    setGotMarkers(false);
+    if (address !== '' && address !== undefined) {
+      handleLatLng(address).then(async () => {
+        await queryTrashCanLocations(userLat, userLng).then((trashcanIDs) => {
+          if (trashcanIDs.success === undefined || trashcanIDs.success.length === 0) {
+            window.alert("Sorry, there is no trash can near this location now. Enter the first one yourself!");
+          }
+          else {
+            state.markers = [];
+            trashcanIDs.success.forEach(async (trashcanID) => {
+              let currTrashCanImg: string;
+              let currTrashCanLat: number;
+              let currTrashCanLng: number;
+              let currTrashCanDate: string;
+              let currRecyclingType: string;
+              await getTrashCanImage(trashcanID).then((trashcanImg) => {
+                currTrashCanImg = trashcanImg.success[0];
+              }).then(async () => {
+                await getTrashCanData(trashcanID).then((trashcanData) => {
+                  currTrashCanDate = trashcanData[0].date_taken;
+                  currTrashCanLat = parseFloat(trashcanData[0].latitude);
+                  currTrashCanLng = parseFloat(trashcanData[0].longitude);
+                  currRecyclingType = trashcanData[0].recycling_types[0];
+                });
+              }).then(() => {
+                let currMarker:MarkerInfo = {
+                  name: currTrashCanDate,
+                  recyclingTypes: new URL(currRecyclingType),
+                  location: "",
+                  pictureURL: currTrashCanImg,
+                  phone: "",
+                  website: "",
+                  category: "TrashCan",
+                  lat: currTrashCanLat,
+                  lng: currTrashCanLng
+                }
+                state.markers.push(currMarker);
+              })
+            });
+            setGotMarkers(true);
+          }
+        });
+      });
+    }
+    else {
+      window.alert("Please enter your location.");
+    }
+  }
+
   const handleSearchBusiness = () => {
+    setGotMarkers(false);
     if (address !== '' && address !== undefined) {
       handleLatLng(address).then(async () => {
         await queryBusinessIDs(userLat, userLng).then((businessIDs) => {
           if (businessIDs.success === undefined || businessIDs.success.length === 0) {
-            if (confirm("Sorry, there is no recycling center near this location now. Be the first one by entering yours!")) {
-              Router.reload();
-            }
+            window.alert("Sorry, there is no recycling center near this location now. Be the first one by entering yours!");
           }
           else {
+            state.markers = [];
             businessIDs.success.forEach(async (businessID) => {
               await getBusinessData(businessID).then((businessData) => {
                 let currMarker:MarkerInfo = {
@@ -74,6 +124,7 @@ const LoadMap = () => {
                   pictureURL: businessData.success.pictureURL,
                   phone: businessData.success.phone,
                   website: new URL(businessData.success.website),
+                  category: "RecyclingCenter",
                   lat: businessData.success.lat,
                   lng: businessData.success.lng
                 }
@@ -99,16 +150,27 @@ const LoadMap = () => {
   };
 
   function attachSecretMessage(marker: google.maps.Marker, secretMessage: MarkerInfo) {
-    const infowindow = new google.maps.InfoWindow({
-      content: 
-        "<p><b>" + secretMessage.name + "</b></p>" + 
-        "<p>recycling: <b>" + secretMessage.recyclingTypes + "</b></p>" + 
-        "<p>Address: <b>" + secretMessage.location + "</b></p>" + 
-        "<p>Phone: <b>" + secretMessage.phone + "</b></p>" + 
-        "<p>Website: <b><a href=" + secretMessage.website + ">" + secretMessage.website + "</b></p>" +
-        "<img src='" + secretMessage.pictureURL + "' width='200' height='100'>",
-      maxWidth: 300
-    });
+    let infowindow;
+    if (secretMessage.category === "RecyclingCenter") {
+      infowindow = new google.maps.InfoWindow({
+        content: 
+          "<p><b>" + secretMessage.name + "</b></p>" + 
+          "<p>recycling: <b>" + secretMessage.recyclingTypes + "</b></p>" + 
+          "<p>Address: <b>" + secretMessage.location + "</b></p>" + 
+          "<p>Phone: <b>" + secretMessage.phone + "</b></p>" + 
+          "<p>Website: <b><a href=" + secretMessage.website + ">" + secretMessage.website + "</b></p>" +
+          "<img src='" + secretMessage.pictureURL + "' width='200' height='100'>",
+        maxWidth: 300
+      });
+    }
+    else if (secretMessage.category === "TrashCan") {
+      infowindow = new google.maps.InfoWindow({
+        content: 
+          "<p>Photo taken on: <b>" + secretMessage.name + "</b></p>" + 
+          "<img src='" + secretMessage.pictureURL + "' width='200' height='100'>",
+        maxWidth: 300
+      });
+    }
 
     marker.addListener("click", (event) => {
       infowindow.open(marker.get("map"), marker);
@@ -195,7 +257,7 @@ const LoadMap = () => {
             <ion-item>
               <ion-button size="default" shape="round" color="warning" onClick={() => router.push("/home")}>Back Home</ion-button>
               <ion-searchbar placeholder="Enter Your Location..." onBlur={e => address = (e.target as HTMLInputElement).value}></ion-searchbar>         
-              <ion-button size="default" shape="round" color="tertiary" onClick={handleSearchBusiness}>Trash Can</ion-button>
+              <ion-button size="default" shape="round" color="tertiary" onClick={handleSearchTrashCan}>Trash Can</ion-button>
               <ion-button size="default" shape="round" color="tertiary" onClick={handleSearchBusiness}>Recycling Center</ion-button>
             </ion-item>
           </ion-toolbar>
