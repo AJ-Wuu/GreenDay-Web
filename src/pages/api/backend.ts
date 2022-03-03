@@ -120,6 +120,55 @@ export const queryBusinessIDs = async (lat: number, lng: number) => {
   return data.json();
 };
 
+export const queryTrashCanLocations = async (lat: number, lng: number) => {
+  let details = {
+    latitude: lat,
+    longitude: lng,
+  } as any;
+
+  const data = await fetch(`${ifDev ? develop : prod}/database/queryTrashcanLocation`, {
+    method: "POST",
+    body: formBody(details),
+    headers: {
+      "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+    },
+  });
+
+  return data.json();
+};
+
+export const getTrashCanImage = async (id: any) => {
+  let details = {
+    image_ids: id,
+  } as any;
+
+  const data = await fetch(`${ifDev ? develop : prod}/database/getTrashcanImage`, {
+    method: "POST",
+    body: formBody(details),
+    headers: {
+      "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+    },
+  });
+
+  return data.json();
+};
+
+export const getTrashCanData = async (id: any) => {
+  let details = {
+    image_ids: id,
+  } as any;
+
+  const data = await fetch(`${ifDev ? develop : prod}/database/getTrashcan`, {
+    method: "POST",
+    body: formBody(details),
+    headers: {
+      "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+    },
+  });
+
+  return data.json();
+};
+
 function getBase64(file:File) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
