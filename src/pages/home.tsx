@@ -8,6 +8,7 @@ import UserHeading from '../components/UserHeading';
 import Menu from '../components/navigation/menu';
 import { Grid, useTheme } from '@geist-ui/react';
 import PictureCard from '../components/PictureCard';
+import { getBusinessImages } from './api/backend';
 
 const Home = () => {
   const theme = useTheme();
@@ -16,7 +17,9 @@ const Home = () => {
   const PictureList = require("../TestCases.json");
 
   const handleGetAllPictures = async () => {
+    let images = await getBusinessImages(user?.uid);
     //let json = await getAllPics(true);
+    console.log(images);
     console.log("json");
   }
 

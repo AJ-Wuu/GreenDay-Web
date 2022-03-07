@@ -4,7 +4,6 @@ import Menu from "../components/navigation/menu";
 import { useTheme } from "@geist-ui/react";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { addImg } from "./api/backend";
 
 const useStyles = makeStyles(() => createStyles({
     previewChip: {
@@ -13,7 +12,6 @@ const useStyles = makeStyles(() => createStyles({
     },
 }));
 
-var address:string;
 var picture:File;
 
 const Gallery = () => {
@@ -24,7 +22,8 @@ const Gallery = () => {
   const [user, setUser] = useState<User | null>(null);
 
   const uploadNewPic = async () => {
-    await addImg(address, picture);
+    console.log(picture);
+    //await addImg(picture);
   }
 
   useEffect(() => {
@@ -47,11 +46,8 @@ const Gallery = () => {
           ))}
         </ion-col>
         <ion-col>
-          <h3>Contribute to Your Community</h3>
-          <h4>Upload picture with detailed address to help more!</h4>
           <ion-item>
-            <ion-label>Address: </ion-label>
-            <ion-input onBlur={(e) => address = (e.target as HTMLInputElement).value}></ion-input>
+            <h3>Upload Pictures To Help People Know Your Business Better!</h3>
             <ion-button onClick={uploadNewPic}>Submit</ion-button>
           </ion-item>
           <DropzoneArea

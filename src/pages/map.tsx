@@ -19,6 +19,7 @@ type MarkerInfo = {
   category: string;
   lat: number;
   lng: number;
+  uid: string;
 }
 
 let map: google.maps.Map;
@@ -59,41 +60,38 @@ const LoadMap = () => {
     setGotMarkers(false);
     if (address !== '' && address !== undefined) {
       handleLatLng(address).then(async () => {
-        await queryTrashCanLocations(userLat, userLng).then((trashcanIDs) => {
-          if (trashcanIDs.success === undefined || trashcanIDs.success.length === 0) {
+        await queryTrashCanLocations(userLat, userLng).then(async (trashcans) => {
+          if (trashcans.success === undefined || trashcans.success.length === 0) {
             window.alert("Sorry, there is no trash can near this location now. Enter the first one yourself!");
           }
           else {
+            let trashcanIDs = trashcans.success;
             state.markers = [];
-            trashcanIDs.success.forEach(async (trashcanID) => {
-              let currTrashCanImg: string;
-              let currTrashCanLat: number;
-              let currTrashCanLng: number;
-              let currTrashCanDate: string;
-              let currRecyclingType: string;
-              await getTrashCanImage(trashcanID).then((trashcanImg) => {
-                currTrashCanImg = trashcanImg.success[0];
-              }).then(async () => {
-                await getTrashCanData(trashcanID).then((trashcanData) => {
-                  currTrashCanDate = trashcanData[0].date_taken;
-                  currTrashCanLat = parseFloat(trashcanData[0].latitude);
-                  currTrashCanLng = parseFloat(trashcanData[0].longitude);
-                  currRecyclingType = trashcanData[0].recycling_types[0];
-                });
-              }).then(() => {
+            let trashcanDetails:any[] = [];
+            let trashcanImage:any[] = [];
+            await getTrashCanData(trashcanIDs).then((trashcanData) => {
+              trashcanDetails.push(trashcanData);
+            }).then(async () => {
+              await getTrashCanImage(trashcanIDs).then((trashcanImages) => {
+                trashcanImage.push(trashcanImages.success);
+              });
+            }).then(() => {
+              for (let i=0; i<trashcanDetails[0].length; i++) {
                 let currMarker:MarkerInfo = {
-                  name: currTrashCanDate,
-                  recyclingTypes: new URL(currRecyclingType),
+                  name: trashcanDetails[0][i].date_taken,
+                  recyclingTypes: "",
                   location: "",
-                  pictureURL: currTrashCanImg,
+                  pictureURL: trashcanImage[0][i],
                   phone: "",
                   website: "",
                   category: "TrashCan",
-                  lat: currTrashCanLat,
-                  lng: currTrashCanLng
+                  lat: parseFloat(trashcanDetails[0][i].latitude),
+                  lng: parseFloat(trashcanDetails[0][i].longitude),
+                  uid: ""
                 }
+                console.log(currMarker);
                 state.markers.push(currMarker);
-              })
+              }
             });
             setGotMarkers(true);
           }
@@ -117,16 +115,18 @@ const LoadMap = () => {
             state.markers = [];
             businessIDs.success.forEach(async (businessID) => {
               await getBusinessData(businessID).then((businessData) => {
+                let websiteURL = (businessData.success.website === null || businessData.success.website === undefined) ? new URL("https://green-day-web.vercel.app/404") : new URL(businessData.success.website);
                 let currMarker:MarkerInfo = {
                   name: businessData.success.name,
                   recyclingTypes: businessData.success.recyclingTypes,
                   location: businessData.success.location,
                   pictureURL: businessData.success.pictureURL,
                   phone: businessData.success.phone,
-                  website: new URL(businessData.success.website),
+                  website: websiteURL,
                   category: "RecyclingCenter",
                   lat: businessData.success.lat,
-                  lng: businessData.success.lng
+                  lng: businessData.success.lng,
+                  uid: businessID
                 }
                 state.markers.push(currMarker);
               });
@@ -155,11 +155,11 @@ const LoadMap = () => {
       infowindow = new google.maps.InfoWindow({
         content: 
           "<p><b>" + secretMessage.name + "</b></p>" + 
-          "<p>recycling: <b>" + secretMessage.recyclingTypes + "</b></p>" + 
+          "<p>Recycling: <b>" + secretMessage.recyclingTypes + "</b></p>" + 
           "<p>Address: <b>" + secretMessage.location + "</b></p>" + 
           "<p>Phone: <b>" + secretMessage.phone + "</b></p>" + 
-          "<p>Website: <b><a href=" + secretMessage.website + ">" + secretMessage.website + "</b></p>" +
-          "<img src='" + secretMessage.pictureURL + "' width='200' height='100'>",
+          "<p>Website: <b><a href=" + secretMessage.website + ">" + secretMessage.website + "</a></b></p>" +
+          "<p><a href=https://green-day-web.vercel.app/recyclingcenter/" + secretMessage.uid + ">" + "Check Out More Pictures Here</a></p>",
         maxWidth: 300
       });
     }
