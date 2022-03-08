@@ -64,7 +64,6 @@ const Menu: React.FC = () => {
         setLoggedIn(false);
       }
     });
-    console.log(loggedIn);
   }, [auth]);
 
   return (
