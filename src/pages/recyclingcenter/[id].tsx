@@ -30,11 +30,11 @@ const RecyclingCenter = (props) => {
         <div className="page__wrapper">
           <div className="page__content">
             <Grid.Container gap={2} marginTop={1} justify="flex-start">
-              {props.images.map(({ pictureURL, date_taken }, i) => (
+              {props.images.map((pictureURL, i) => (
                 <Grid key={i} xs={24} sm={12} md={8}>
                 <PictureCard
                   pictureURL={pictureURL}
-                  pictureName={date_taken}
+                  pictureName={""}
                 />
               </Grid>
               ))}    
@@ -89,7 +89,6 @@ export async function getStaticProps(context) {
       data: data.success,
       images: images.success
     },
-    
   };
 }
 

@@ -114,41 +114,56 @@ const Settings = () => {
     );
   };
 
+  const handleCheckBlank = () => {
+    if (userDetails.name === "" || userDetails.name === undefined
+     || userDetails.phone === "" || userDetails.phone === undefined
+     || userDetails.recyclingTypes === "" || userDetails.recyclingTypes === undefined
+     || userDetails.street === "" || userDetails.street === undefined
+     || userDetails.city === "" || userDetails.city === undefined
+     || userDetails.state === "" || userDetails.state === undefined
+     || userDetails.zipcode === "" || userDetails.zipcode === undefined) {
+      window.alert("Please fill in all required blanks (in red).")
+    }
+    else {
+      handleLatLng(userDetails.location).then(async () => {
+        await getBusinessData(user?.getIdToken()).then((data) => {
+          console.log(data);
+          if (data.success === undefined) { //return error
+            console.log("Create Business");
+            return createBusiness(userDetails);
+          }
+          else {
+            console.log("Update Business");
+            return updateBusiness(userDetails);
+          }
+        }).then((response) => {
+          if (response.success === undefined) {
+            window.alert("Woops, something goes wrong. Please try again later.")
+          }
+          else {
+            Router.reload();
+          }
+        })
+        /*
+        //deprecated - direct firestore update
+        await setDoc(doc(db, 'business', user!.uid), userDetails)
+          .then(() => {
+              Router.reload();
+          }).catch(error => {
+              alert(error);
+          });
+        */
+      })
+    }
+  }
+
   const handleSubmit = async () => {
     userDetails.location = `${userDetails.street}, ${userDetails.city}, ${userDetails.state} ${userDetails.zipcode}`;
     if (otherTypes !== "") {
       userDetails.recyclingTypes = `${userDetails.recyclingTypes},${otherTypes}`;
       console.log(userDetails.recyclingTypes);
     }
-    handleLatLng(userDetails.location).then(async () => {
-      await getBusinessData(user?.getIdToken()).then((data) => {
-        console.log(data);
-        if (data.success === undefined) { //return error
-          console.log("Create Business");
-          return createBusiness(userDetails);
-        }
-        else {
-          console.log("Update Business");
-          return updateBusiness(userDetails);
-        }
-      }).then((response) => {
-        if (response.success === undefined) {
-          window.alert("Woops, something goes wrong. Please try again later.")
-        }
-        else {
-          Router.reload();
-        }
-      })
-      /*
-      //deprecated - direct firestore update
-      await setDoc(doc(db, 'business', user!.uid), userDetails)
-        .then(() => {
-            Router.reload();
-        }).catch(error => {
-            alert(error);
-        });
-      */
-    })
+    handleCheckBlank();
   };
 
   const loadData = async (user: User) => {
@@ -259,7 +274,7 @@ const Settings = () => {
               </ion-item>
               <ion-card-content>
                 <ion-item>
-                  <ion-label class="ion-text-wrap" color="primary">
+                  <ion-label class="ion-text-wrap" color="danger">
                     Name:{' '}
                   </ion-label>
                   <ion-input
@@ -272,7 +287,7 @@ const Settings = () => {
                       ).value)
                     }
                   ></ion-input>
-                  <ion-label class="ion-text-wrap" color="primary">
+                  <ion-label class="ion-text-wrap" color="danger">
                     Phone:{' '}
                   </ion-label>
                   <ion-input
@@ -298,7 +313,7 @@ const Settings = () => {
                   ></ion-input>
                 </ion-item>
                 <ion-item>
-                  <ion-label class="ion-text-wrap" color="primary">
+                  <ion-label class="ion-text-wrap" color="danger">
                     Street:{' '}
                   </ion-label>
                   <ion-input
@@ -311,7 +326,7 @@ const Settings = () => {
                       ).value)
                     }
                   ></ion-input>
-                  <ion-label class="ion-text-wrap" color="primary">
+                  <ion-label class="ion-text-wrap" color="danger">
                     City:{' '}
                   </ion-label>
                   <ion-input
@@ -322,7 +337,7 @@ const Settings = () => {
                       (userDetails.city = (e.target as HTMLInputElement).value)
                     }
                   ></ion-input>
-                  <ion-label class="ion-text-wrap" color="primary">
+                  <ion-label class="ion-text-wrap" color="danger">
                     State/Province:{' '}
                   </ion-label>
                   <ion-input
@@ -333,7 +348,7 @@ const Settings = () => {
                       (userDetails.state = (e.target as HTMLInputElement).value)
                     }
                   ></ion-input>
-                  <ion-label class="ion-text-wrap" color="primary">
+                  <ion-label class="ion-text-wrap" color="danger">
                     Zip Code:{' '}
                   </ion-label>
                   <ion-input
@@ -348,7 +363,7 @@ const Settings = () => {
                   ></ion-input>
                 </ion-item>
                 <ion-item>
-                  <ion-label class='recyclingTypesLabel' color="primary">Recycling Type(s): </ion-label>
+                  <ion-label class='recyclingTypesLabel' color="danger">Recycling Type(s): </ion-label>
                   <ion-select
                     class='recyclingTypesSelect'
                     multiple={true}

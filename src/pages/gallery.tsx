@@ -4,32 +4,52 @@ import Menu from "../components/navigation/menu";
 import { useTheme } from "@geist-ui/react";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { addBusinessImage, getBusinessImages } from "./api/backend";
+import { v4 as uuidv4 } from 'uuid';
+import Router from 'next/router';
 
 const useStyles = makeStyles(() => createStyles({
-    previewChip: {
-        minWidth: 160,
-        maxWidth: 210
-    },
+  previewChip: {
+    minWidth: 160,
+    maxWidth: 210
+  },
 }));
 
 var picture:File;
+var currPictures:[];
 
 const Gallery = () => {
   const auth = getAuth();
   const theme = useTheme();
   const classes = useStyles();
-  const json = require("../TestCases.json");
   const [user, setUser] = useState<User | null>(null);
+  const [gallery, setGallery] = useState<boolean>(false);
 
-  const uploadNewPic = async () => {
-    console.log(picture);
-    //await addImg(picture);
+  const handleGetAllPictures = async () => {
+    await getBusinessImages(user?.uid).then((images) => {
+      if (images.success !== undefined && images.success.length !== 0) {
+        currPictures = images.success;
+        setGallery(true);
+      }
+    })
+  }
+
+  const handleUploadNewPic = async () => {
+    let response = await addBusinessImage(uuidv4(), picture);
+    if (response.success !== undefined || response.success !== null) {
+      Router.reload();
+    }
+    else {
+      window.alert("Ah oh, something goes wrong. Please try again later.");
+    }
   }
 
   useEffect(() => {
-    onAuthStateChanged(auth, (aUser) => {
+    onAuthStateChanged(auth, async (aUser) => {
       console.log(`Auth state changes: ${aUser}`);
       setUser(aUser);
+      setGallery(false);
+      await handleGetAllPictures();
     });
   }, [auth]);
 
@@ -41,17 +61,20 @@ const Gallery = () => {
       <ion-row>
         <ion-col>
           <h3>Your Gallery</h3>
-          {json.map(({ name, pictureURL }) => (
-            <img title={name} src={pictureURL} width={400} height={400}/>
-          ))}
+          {gallery ? (
+            currPictures.map((pictureURL, i) => (
+              <img title={"pic"} key={i} src={pictureURL} width={400} height={400}/>
+            ))) : (
+            <h4>Add your first picture now!</h4>
+          )}
         </ion-col>
         <ion-col>
           <ion-item>
-            <h3>Upload Pictures To Help People Know Your Business Better!</h3>
-            <ion-button onClick={uploadNewPic}>Submit</ion-button>
+            <h3>Upload Pictures To Help People Know Your Business!</h3>
+            <ion-button size="default" shape="round" color="tertiary" onClick={handleUploadNewPic}>Submit</ion-button>
           </ion-item>
           <DropzoneArea
-            acceptedFiles={['image/*']}
+            acceptedFiles={['.jpg, .png']}
             dropzoneText={"Drag and drop an image here or click"}
             filesLimit={1}
             previewGridProps={{container: { spacing: 1, direction: 'row' }}}
