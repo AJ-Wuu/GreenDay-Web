@@ -145,15 +145,12 @@ function getBase64(file:File) {
   });
 }
 
-export const addBusinessImage = async (data: any, result: any) => {
+export const addBusinessImage = async (imageID: any, file: File) => {
   const id_token = await currentUser().getIdToken();
   let details = {
     id_token: id_token,
-    data: JSON.stringify({
-      key: id_token,
-      multi: data,
-    }),
-    image_base64: await getBase64(result),
+    image_id: imageID,
+    image_base64: await getBase64(file),
   } as any;
 
   const response = await fetch(`${ifDev ? develop : prod}/database/addBusinessImage`, {
