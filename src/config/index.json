@@ -67,7 +67,7 @@
     "items": [
       {
         "name": "Google Maps",
-        "description": "Map and Geocoding are our friends during the implementation. By making use of their strong functionalities, we manage to visually display the positions of recycling centers and trash cans, and keep all user updates aligning closely for our database’s self-sustainiblity.",
+        "description": "Map and Geocoding are our friends during the implementation. By making use of their strong functionalities, we manage to visually display the positions of recycling centers and trash cans, and keep all user updates aligning closely for our database’s self-sustainability.",
         "icon": "/assets/images/googlemaps.png"
       },
       {
