@@ -164,6 +164,24 @@ export const addBusinessImage = async (imageID: any, file: File) => {
   return response.json();
 }
 
+export const deleteBusinessImage = async (ids: any[]) => {
+  const id_token = await currentUser().getIdToken();
+  let details = {
+    id_token: id_token,
+    image_ids: ids,
+  } as any;
+
+  const response = await fetch(`${ifDev ? develop : prod}/database/deleteBusinessImages`, {
+    method: "DELETE",
+    body: formBody(details),
+    headers: {
+      "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+    },
+  });
+
+  return response.json();
+}
+
 export const queryTrashCanLocations = async (lat: number, lng: number) => {
   let details = {
     latitude: lat,
