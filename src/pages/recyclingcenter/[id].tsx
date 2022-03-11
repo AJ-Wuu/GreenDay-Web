@@ -29,6 +29,7 @@ const RecyclingCenter = (props) => {
             Name: {props.data.name}<br></br>
             Phone: {props.data.phone}<br></br>
             Address: {props.data.location}<br></br>
+            Time Availability: {props.data.timeAvailability}<br></br>
             Website:{' '}
             <Link href={props.data.website!} passHref={true}>
               {props.data.website.toString()}
