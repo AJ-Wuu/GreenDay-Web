@@ -1,15 +1,22 @@
-import { Grid, Text, useTheme } from "@geist-ui/react";
+import { Grid, Image, Text, useTheme } from "@geist-ui/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import Menu from "../../components/navigation/menu";
-import PictureCard from "../../components/PictureCard";
 import { getBusinessData, getBusinessImages } from "../api/backend";
 
 const RecyclingCenter = (props) => {
   const theme = useTheme();
-  //const data = await getBusinessData(props.uid);
-  //const images = await getBusinessImages(id);
-  //console.log(data);
-  //console.log(images);
+  const [gallery, setGallery] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (props.images === []) {
+      setGallery(false);
+    }
+    else {
+      setGallery(true);
+    }
+  });
+
   return (
     <>
     <Menu></Menu>
@@ -30,15 +37,12 @@ const RecyclingCenter = (props) => {
         <div className="page__wrapper">
           <div className="page__content">
             <Grid.Container gap={2} marginTop={1} justify="flex-start">
-              {props.images.map((pictureURL, i) => (
-                <Grid key={i} xs={24} sm={12} md={8}>
-                <PictureCard
-                  pictureURL={pictureURL}
-                  pictureName={""}
-                />
+            {gallery && (props.images.map(picture => (
+              <Grid xs={24} sm={12} md={8}>
+                <Image src={picture}></Image>
               </Grid>
-              ))}    
-            </Grid.Container>
+            )))}
+          </Grid.Container>
           </div>
         </div>
       </div>

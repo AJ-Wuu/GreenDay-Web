@@ -10,7 +10,7 @@ import { Grid, useTheme } from '@geist-ui/react';
 import PictureCard from '../components/PictureCard';
 import { getBusinessImages } from './api/backend';
 
-var currPictures:[];
+var currPictures:any[] = [];
 
 const Home = () => {
   const theme = useTheme();
@@ -18,20 +18,17 @@ const Home = () => {
   const [user, setUser] = useState<User | null>(null);
   const [gallery, setGallery] = useState<boolean>(false);
 
-  const handleGetAllPictures = async () => {
-    await getBusinessImages(user?.uid).then((images) => {
-      if (images.success !== undefined && images.success.length !== 0) {
-        currPictures = images.success;
+  useEffect(() => {
+    onAuthStateChanged(auth, async (aUser) => {
+      setUser(aUser);
+      let getPictures = await getBusinessImages(aUser?.uid);
+      currPictures = getPictures.success;
+      if (currPictures === []) {
+        setGallery(false);
+      }
+      else {
         setGallery(true);
       }
-    })
-  }
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (aUser) => {
-      setUser(aUser);
-      setGallery(false);
-      handleGetAllPictures();
     });
   }, [auth]);
 
@@ -44,10 +41,10 @@ const Home = () => {
         <div className="page__wrapper">
           <div className="page__content">
             <Grid.Container gap={2} marginTop={1} justify="flex-start">
-              {gallery && (currPictures.map((pictureURL, i) => (
-                <Grid key={i} xs={24} sm={12} md={8}>
+              {gallery && (currPictures.map(picture => (
+                <Grid xs={24} sm={12} md={8}>
                   <PictureCard
-                    pictureURL={pictureURL}
+                    pictureURL={picture}
                     pictureName={""}
                   />
                 </Grid>

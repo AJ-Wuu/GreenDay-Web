@@ -1,12 +1,13 @@
 import { DropzoneArea } from "material-ui-dropzone";
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import Menu from "../components/navigation/menu";
-import { useTheme } from "@geist-ui/react";
+import { Grid, useTheme } from "@geist-ui/react";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { addBusinessImage, getBusinessImages } from "./api/backend";
 import { v4 as uuidv4 } from 'uuid';
 import Router from 'next/router';
+import PictureCard from "../components/PictureCard";
 
 const useStyles = makeStyles(() => createStyles({
   previewChip: {
@@ -16,7 +17,7 @@ const useStyles = makeStyles(() => createStyles({
 }));
 
 var picture:File;
-var currPictures:[];
+var currPictures:any[] = [];
 
 const Gallery = () => {
   const auth = getAuth();
@@ -24,15 +25,6 @@ const Gallery = () => {
   const classes = useStyles();
   const [user, setUser] = useState<User | null>(null);
   const [gallery, setGallery] = useState<boolean>(false);
-
-  const handleGetAllPictures = async () => {
-    await getBusinessImages(user?.uid).then((images) => {
-      if (images.success !== undefined && images.success.length !== 0) {
-        currPictures = images.success;
-        setGallery(true);
-      }
-    })
-  }
 
   const handleUploadNewPic = async () => {
     let response = await addBusinessImage(uuidv4(), picture);
@@ -48,8 +40,14 @@ const Gallery = () => {
     onAuthStateChanged(auth, async (aUser) => {
       console.log(`Auth state changes: ${aUser}`);
       setUser(aUser);
-      setGallery(false);
-      await handleGetAllPictures();
+      let getPictures = await getBusinessImages(aUser?.uid);
+      currPictures = getPictures.success;
+      if (currPictures === []) {
+        setGallery(false);
+      }
+      else {
+        setGallery(true);
+      }
     });
   }, [auth]);
 
@@ -61,12 +59,16 @@ const Gallery = () => {
       <ion-row>
         <ion-col>
           <h3>Your Gallery</h3>
-          {gallery ? (
-            currPictures.map((pictureURL, i) => (
-              <img title={"pic"} key={i} src={pictureURL} width={400} height={400}/>
-            ))) : (
-            <h4>Add your first picture now!</h4>
-          )}
+          <Grid.Container gap={2} marginTop={1} justify="flex-start">
+            {gallery && (currPictures.map(picture => (
+              <Grid xs={24} sm={12} md={8}>
+                <PictureCard
+                  pictureURL={picture}
+                  pictureName={""}
+                />
+              </Grid>
+            )))}
+          </Grid.Container>
         </ion-col>
         <ion-col>
           <ion-item>

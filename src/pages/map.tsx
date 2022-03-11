@@ -159,7 +159,7 @@ const LoadMap = () => {
           "<p>Address: <b>" + secretMessage.location + "</b></p>" + 
           "<p>Phone: <b>" + secretMessage.phone + "</b></p>" + 
           "<p>Website: <b><a href=" + secretMessage.website + ">" + secretMessage.website + "</a></b></p>" +
-          "<p><a href=https://green-day-web-aj-wuu.vercel.app/recyclingcenter/" + secretMessage.uid + ">" + "Check Out More Pictures Here</a></p>",
+          "<p><a href=\"http://green-day-web.vercel.app/recyclingcenter/" + secretMessage.uid + "\" target=\"_blank\">" + "Check Out More Pictures Here</a></p>",
         maxWidth: 300
       });
     }
