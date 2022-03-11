@@ -9,6 +9,7 @@ import Menu from '../components/navigation/menu';
 import { Grid, useTheme } from '@geist-ui/react';
 import PictureCard from '../components/PictureCard';
 //import { getBusinessImages } from './api/backend';
+import { Helmet } from 'react-helmet';
 
 var currPictures:any[] = [];
 
@@ -36,6 +37,9 @@ const Home = () => {
 
   return (
     <>
+    <Helmet>
+      <title>GreenDay | Home</title>
+    </Helmet>
     <Menu></Menu>
     {user ? (
       <>

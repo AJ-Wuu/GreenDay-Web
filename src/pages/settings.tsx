@@ -18,6 +18,7 @@ import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import DateFnsUtils from '@date-io/date-fns'; // choose your lib
 import { MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
+import { Helmet } from 'react-helmet';
 
 Geocode.setApiKey(process.env.GEOCODE_API_KEY!);
 
@@ -238,6 +239,9 @@ const Settings = () => {
 
   return (
     <>
+      <Helmet>
+        <title>GreenDay | Settings</title>
+      </Helmet>
       <Menu></Menu>
       {user ? (
         <>
@@ -380,31 +384,44 @@ const Settings = () => {
                     }
                   ></ion-input>
                 </ion-item>
-                <ion-item>
-                  <ion-label class='recyclingTypesLabel' color="danger">Recycling Type(s): </ion-label>
-                  <ion-select
-                    class='recyclingTypesSelect'
-                    multiple={true}
-                    cancelText="Cancel"
-                    okText="Okay"
-                    onBlur={(e) => {
-                      userDetails.recyclingTypes = (
-                        e.target as HTMLInputElement
-                      ).value?.toString();
-                    }}>
-                    {RecycledTypesList.map(({ val }, i) => (
-                      <ion-select-option key={i}>{val}</ion-select-option>
-                    ))};
-                  </ion-select>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="ion-text-wrap" color="primary" placeholder='e.g. MTWRF 9am - 5pm'>
-                    Time Availability:{' '}
-                  </ion-label>
-                  <ion-button onClick={() => setShowClocks(true)}>Click Here to Choose</ion-button>
-                  <ion-label color='primary'>Other Type(s): </ion-label>
-                  <ion-input onBlur={e => otherTypes = (e.target as HTMLInputElement).value}></ion-input>
-                </ion-item>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-item>
+                        <ion-label class='recyclingTypesLabel' color="danger">Recycling Type(s): </ion-label>
+                        <ion-select
+                          class='recyclingTypesSelect'
+                          multiple={true}
+                          cancelText="Cancel"
+                          okText="Okay"
+                          onBlur={(e) => {
+                            userDetails.recyclingTypes = (
+                              e.target as HTMLInputElement
+                            ).value?.toString();
+                          }}>
+                          {RecycledTypesList.map(({ val }, i) => (
+                            <ion-select-option key={i}>{val}</ion-select-option>
+                          ))};
+                        </ion-select>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label color='primary'>Other Type(s): </ion-label>
+                      <ion-input placeholder='Split by comma, NO space (eg. Type1,Type2)' onBlur={e => otherTypes = (e.target as HTMLInputElement).value}></ion-input>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-item>
+                        <ion-label class="ion-text-wrap" color="primary" placeholder='e.g. MTWRF 9am - 5pm'>
+                          Time Availability:{' '}
+                        </ion-label>
+                        <ion-button onClick={() => setShowClocks(true)}>Click Here to Choose</ion-button>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col></ion-col>
+                  </ion-row>
+                </ion-grid>
                 {showClocks && <ion-grid>
                   <ion-row>
                     <ion-col>
@@ -579,6 +596,7 @@ const Settings = () => {
           justify-content: center;
           flex: 1;
           margin-left: 20px;
+          margin-right: 20px;
           color: #2c9678;
         }
         .heading__info :global(.heading__user-info) {

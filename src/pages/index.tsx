@@ -8,9 +8,14 @@ import LazyShow from '../components/LazyShow';
 import MainHero from '../components/MainHero';
 import MainHeroImage from '../components/MainHeroImage';
 import Product from '../components/Product';
+import { Helmet } from 'react-helmet';
 
 const App = () => {
   return (
+    <>
+    <Helmet>
+      <title>GreenDay</title>
+    </Helmet>
     <div className={`bg-background grid gap-y-16 overflow-hidden`}>
       <div className={`relative bg-background`}>
         <div className="max-w-full mx-auto">
@@ -42,6 +47,7 @@ const App = () => {
         </>
       </LazyShow>
     </div>
+    </>
   );
 };
 

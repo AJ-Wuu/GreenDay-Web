@@ -8,6 +8,7 @@ import { addBusinessImage, getBusinessImages } from "./api/backend";
 import { v4 as uuidv4 } from 'uuid';
 import Router from 'next/router';
 import PictureCard from "../components/PictureCard";
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(() => createStyles({
   previewChip: {
@@ -42,7 +43,7 @@ const Gallery = () => {
       setUser(aUser);
       let getPictures = await getBusinessImages(aUser?.uid);
       currPictures = getPictures.success;
-      if (currPictures === []) {
+      if (currPictures === [] || currPictures.length === 0) {
         setGallery(false);
       }
       else {
@@ -53,6 +54,9 @@ const Gallery = () => {
 
   return (
     <>
+    <Helmet>
+      <title>GreenDay | Gallery</title>
+    </Helmet>
     <Menu></Menu>
     {user ? (
     <div className="page__content"><ion-grid>

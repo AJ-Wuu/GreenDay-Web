@@ -6,6 +6,7 @@ import StyledMap from "../styles/map.css";
 import Geocode from 'react-geocode';
 import { getBusinessData, getTrashCanData, getTrashCanImage, queryBusinessIDs, queryTrashCanLocations } from "./api/backend";
 import router from "next/router";
+import { Helmet } from 'react-helmet';
 
 Geocode.setApiKey(process.env.GEOCODE_API_KEY!);
 
@@ -249,61 +250,64 @@ const LoadMap = () => {
 
   return (
     <>
-      <div>
-        <ion-header class="ion-no-border">
-          <ion-toolbar>
-            <ion-item>
-              <ion-button size="default" shape="round" color="warning" onClick={() => router.push("/home")}>Back Home</ion-button>
-              <ion-searchbar placeholder="Enter Your Location..." onBlur={e => address = (e.target as HTMLInputElement).value}></ion-searchbar>         
-              <ion-button size="default" shape="round" color="tertiary" onClick={handleSearchTrashCan}>Trash Can</ion-button>
-              <ion-button size="default" shape="round" color="tertiary" onClick={handleSearchBusiness}>Recycling Center</ion-button>
-            </ion-item>
-          </ion-toolbar>
-        </ion-header>
-        <StyledMap>
-          <div id="google-map" />
-        </StyledMap>
-      </div>
-      <style jsx>{`
-        #search-bar {
-          text-align: center;
-          display: flex;
-          width: 20%;
-          float: left;
-          background: lightgreen;
-        }
-        #map {
-          width: 80%;
-          float:right;
-        }
-        #space {
-          color: lightgreen;
-        }
-        .page__wrapper {
-          background-color: ${theme.palette.accents_1};
-          min-height: calc(100vh - 172px);
-        }
-        .page__content {
-          display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-          width: ${theme.layout.pageWidthWithMargin};
-          max-width: 100%;
-          margin: 0 auto;
-          padding: calc(${theme.layout.unit} * 2) ${theme.layout.pageMargin};
-          box-sizing: border-box;
-        }
-        .actions-stack {
-          display: flex;
-          width: 100%;
-        }
-        .actions-stack :global(.input-wrapper) {
-          background-color: ${theme.palette.background};
-        }
-        .actions-stack :global(input) {
-          font-size: 14px;
-        }
-      `}</style>
+    <Helmet>
+      <title>GreenDay | Map</title>
+    </Helmet>
+    <div>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-item>
+            <ion-button size="default" shape="round" color="warning" onClick={() => router.push("/home")}>Back Home</ion-button>
+            <ion-searchbar placeholder="Enter Your Location..." onBlur={e => address = (e.target as HTMLInputElement).value}></ion-searchbar>         
+            <ion-button size="default" shape="round" color="tertiary" onClick={handleSearchTrashCan}>Trash Can</ion-button>
+            <ion-button size="default" shape="round" color="tertiary" onClick={handleSearchBusiness}>Recycling Center</ion-button>
+          </ion-item>
+        </ion-toolbar>
+      </ion-header>
+      <StyledMap>
+        <div id="google-map" />
+      </StyledMap>
+    </div>
+    <style jsx>{`
+      #search-bar {
+        text-align: center;
+        display: flex;
+        width: 20%;
+        float: left;
+        background: lightgreen;
+      }
+      #map {
+        width: 80%;
+        float:right;
+      }
+      #space {
+        color: lightgreen;
+      }
+      .page__wrapper {
+        background-color: ${theme.palette.accents_1};
+        min-height: calc(100vh - 172px);
+      }
+      .page__content {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: ${theme.layout.pageWidthWithMargin};
+        max-width: 100%;
+        margin: 0 auto;
+        padding: calc(${theme.layout.unit} * 2) ${theme.layout.pageMargin};
+        box-sizing: border-box;
+      }
+      .actions-stack {
+        display: flex;
+        width: 100%;
+      }
+      .actions-stack :global(.input-wrapper) {
+        background-color: ${theme.palette.background};
+      }
+      .actions-stack :global(input) {
+        font-size: 14px;
+      }
+    `}</style>
     </>
   )
 }
