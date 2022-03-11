@@ -14,6 +14,10 @@ import db from '../firebase.config';
 import RecycledTypesList from '../RecycledTypes';
 import Menu from '../components/navigation/menu';
 import { createBusiness, deleteBusiness, getBusinessData, updateBusiness } from './api/backend';
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import DateFnsUtils from '@date-io/date-fns'; // choose your lib
+import { MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
 
 Geocode.setApiKey(process.env.GEOCODE_API_KEY!);
 
@@ -61,9 +65,25 @@ const Settings = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userInfoUpdate, setUserInfoUpdate] = useState<boolean>(false);
   const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [showClocks, setShowClocks] = useState<boolean>(false);
+  const [MondayClockBegin, setMondayClockBegin] = useState(new Date());
+  const [TuesdayClockBegin, setTuesdayClockBegin] = useState(new Date());
+  const [WednesdayClockBegin, setWednesdayClockBegin] = useState(new Date());
+  const [ThursdayClockBegin, setThursdayClockBegin] = useState(new Date());
+  const [FridayClockBegin, setFridayClockBegin] = useState(new Date());
+  const [SaturdayClockBegin, setSaturdayClockBegin] = useState(new Date());
+  const [SundayClockBegin, setSundayClockBegin] = useState(new Date());
+  const [MondayClockEnd, setMondayClockEnd] = useState(new Date());
+  const [TuesdayClockEnd, setTuesdayClockEnd] = useState(new Date());
+  const [WednesdayClockEnd, setWednesdayClockEnd] = useState(new Date());
+  const [ThursdayClockEnd, setThursdayClockEnd] = useState(new Date());
+  const [FridayClockEnd, setFridayClockEnd] = useState(new Date());
+  const [SaturdayClockEnd, setSaturdayClockEnd] = useState(new Date());
+  const [SundayClockEnd, setSundayClockEnd] = useState(new Date());
 
   const handleTriggerUpdate = () => {
     setUserInfoUpdate(true);
+    setShowClocks(false);
   };
 
   const handleDeleteCurrentBusiness = async () => {
@@ -94,8 +114,6 @@ const Settings = () => {
         const { lat, lng } = response.results[0].geometry.location;
         userDetails.lat = lat;
         userDetails.lng = lng;
-        console.log(userDetails.lat);
-        console.log(userDetails.lng);
       },
       (error) => {
         console.error(error);
@@ -106,7 +124,6 @@ const Settings = () => {
         userDetails.location = response.results[0].formatted_address;
         const county = response.results[0].address_components[3].long_name;
         userDetails.county = county;
-        console.log(userDetails.county);
       },
       (error) => {
         console.error(error);
@@ -126,8 +143,7 @@ const Settings = () => {
     }
     else {
       handleLatLng(userDetails.location).then(async () => {
-        await getBusinessData(user?.getIdToken()).then((data) => {
-          console.log(data);
+        await getBusinessData(user?.uid).then((data) => {
           if (data.success === undefined) { //return error
             console.log("Create Business");
             return createBusiness(userDetails);
@@ -161,7 +177,17 @@ const Settings = () => {
     userDetails.location = `${userDetails.street}, ${userDetails.city}, ${userDetails.state} ${userDetails.zipcode}`;
     if (otherTypes !== "") {
       userDetails.recyclingTypes = `${userDetails.recyclingTypes},${otherTypes}`;
-      console.log(userDetails.recyclingTypes);
+    }
+    if (showClocks === true) {     
+      let MondayTime = `Monday: ` + ((MondayClockBegin.getHours() === MondayClockEnd.getHours()) ? `Closed; ` : (`${MondayClockBegin.getHours()}:` + ((MondayClockBegin.getMinutes() === 0) ? `00` : `${MondayClockBegin.getMinutes()}`) + ` to ${MondayClockEnd.getHours()}:` + ((MondayClockEnd.getMinutes() === 0) ? `00; ` : `${MondayClockEnd.getMinutes()}; `)));
+      let TuesdayTime = `Tuesday: ` + ((TuesdayClockBegin.getHours() === TuesdayClockEnd.getHours()) ? `Closed; ` : (`${TuesdayClockBegin.getHours()}:` + ((TuesdayClockBegin.getMinutes() === 0) ? `00` : `${TuesdayClockBegin.getMinutes()}`) + ` to ${TuesdayClockEnd.getHours()}:` + ((TuesdayClockEnd.getMinutes() === 0) ? `00; ` : `${TuesdayClockEnd.getMinutes()}; `)));
+      let WednesdayTime = `Wednesday: ` + ((WednesdayClockBegin.getHours() === WednesdayClockEnd.getHours()) ? `Closed; ` : (`${WednesdayClockBegin.getHours()}:` + ((WednesdayClockBegin.getMinutes() === 0) ? `00` : `${WednesdayClockBegin.getMinutes()}`) + ` to ${WednesdayClockEnd.getHours()}:` + ((WednesdayClockEnd.getMinutes() === 0) ? `00; ` : `${WednesdayClockEnd.getMinutes()}; `)));
+      let ThursdayTime = `Thursday: ` + ((ThursdayClockBegin.getHours() === ThursdayClockEnd.getHours()) ? `Closed; ` : (`${ThursdayClockBegin.getHours()}:` + ((ThursdayClockBegin.getMinutes() === 0) ? `00` : `${ThursdayClockBegin.getMinutes()}`) + ` to ${ThursdayClockEnd.getHours()}:` + ((ThursdayClockEnd.getMinutes() === 0) ? `00; ` : `${ThursdayClockEnd.getMinutes()}; `)));
+      let FridayTime = `Friday: ` + ((FridayClockBegin.getHours() === FridayClockEnd.getHours()) ? `Closed; ` : (`${FridayClockBegin.getHours()}:` + ((FridayClockBegin.getMinutes() === 0) ? `00` : `${FridayClockBegin.getMinutes()}`) + ` to ${FridayClockEnd.getHours()}:` + ((FridayClockEnd.getMinutes() === 0) ? `00; ` : `${FridayClockEnd.getMinutes()}; `)));
+      let SaturdayTime = `Saturday: ` + ((SaturdayClockBegin.getHours() === SaturdayClockEnd.getHours()) ? `Closed; ` : (`${SaturdayClockBegin.getHours()}:` + ((SaturdayClockBegin.getMinutes() === 0) ? `00` : `${SaturdayClockBegin.getMinutes()}`) + ` to ${SaturdayClockEnd.getHours()}:` + ((SaturdayClockEnd.getMinutes() === 0) ? `00; ` : `${SaturdayClockEnd.getMinutes()}; `)));
+      let SundayTime = `Sunday: ` + ((SundayClockBegin.getHours() === SundayClockEnd.getHours()) ? `Closed` : (`${SundayClockBegin.getHours()}:` + ((SundayClockBegin.getMinutes() === 0) ? `00` : `${SundayClockBegin.getMinutes()}`) + ` to ${SundayClockEnd.getHours()}:` + ((SundayClockEnd.getMinutes() === 0) ? `00` : `${SundayClockEnd.getMinutes()}`)));
+      userDetails.timeAvailability = `${MondayTime}${TuesdayTime}${WednesdayTime}${ThursdayTime}${FridayTime}${SaturdayTime}${SundayTime}`;
+      setShowClocks(false);
     }
     handleCheckBlank();
   };
@@ -171,8 +197,6 @@ const Settings = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
-      console.log(user.uid.toString());
-      console.log(data);
       userDetails.name = data.name;
       userDetails.phone = data.phone;
       userDetails.street = data.street;
@@ -187,7 +211,6 @@ const Settings = () => {
       userDetails.timeAvailability = data.timeAvailability;
       userDetails.website = data.website;
       userDetails.recyclingTypes = data.recyclingTypes;
-      console.log(userDetails);
     }
     else {
       console.log('No such document!');
@@ -198,7 +221,6 @@ const Settings = () => {
     setShowDetails(false);
     setUserInfoUpdate(false);
     onAuthStateChanged(auth, (aUser) => {
-      console.log(`Auth state changes: ${aUser}`);
       setUser(aUser);
       if (aUser) {
         if (aUser.photoURL !== null) {
@@ -208,7 +230,6 @@ const Settings = () => {
           avatarSrc = "/assets/images/userLogo.jpg";
         }
         loadData(aUser).then(() => {
-          console.log(userDetails);
           setShowDetails(true);
         });
       }
@@ -287,17 +308,14 @@ const Settings = () => {
                       ).value)
                     }
                   ></ion-input>
-                  <ion-label class="ion-text-wrap" color="danger">
-                    Phone:{' '}
-                  </ion-label>
-                  <ion-input
+                  <PhoneInput
+                    placeholder="Enter phone number"
                     type="tel"
                     required={true}
                     value={userDetails.phone}
-                    onBlur={(e) =>
-                      (userDetails.phone = (e.target as HTMLInputElement).value)
-                    }
-                  ></ion-input>
+                    onChange={(e) =>
+                      (userDetails.phone = e?.toString()!)
+                    }/>
                   <ion-label class="ion-text-wrap" color="primary">
                     Website:{' '}
                   </ion-label>
@@ -383,19 +401,128 @@ const Settings = () => {
                   <ion-label class="ion-text-wrap" color="primary" placeholder='e.g. MTWRF 9am - 5pm'>
                     Time Availability:{' '}
                   </ion-label>
-                  <ion-input
-                    type="text"
-                    required={true}
-                    value={userDetails.timeAvailability}
-                    onBlur={(e) =>
-                      (userDetails.timeAvailability = (
-                        e.target as HTMLInputElement
-                      ).value)
-                    }
-                  ></ion-input>
+                  <ion-button onClick={() => setShowClocks(true)}>Click Here to Choose</ion-button>
                   <ion-label color='primary'>Other Type(s): </ion-label>
                   <ion-input onBlur={e => otherTypes = (e.target as HTMLInputElement).value}></ion-input>
                 </ion-item>
+                {showClocks && <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-label>Day (leave the auto value unchanged if you are not available)</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label>From</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label>To</ion-label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-label>Monday</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={MondayClockBegin} onChange={(newValue) => setMondayClockBegin(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={MondayClockEnd} onChange={(newValue) => setMondayClockEnd(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-label>Tuesday</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={TuesdayClockBegin} onChange={(newValue) => setTuesdayClockBegin(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={TuesdayClockEnd} onChange={(newValue) => setTuesdayClockEnd(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-label>Wednesday</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={WednesdayClockBegin} onChange={(newValue) => setWednesdayClockBegin(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={WednesdayClockEnd} onChange={(newValue) => setWednesdayClockEnd(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-label>Thursday</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={ThursdayClockBegin} onChange={(newValue) => setThursdayClockBegin(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={ThursdayClockEnd} onChange={(newValue) => setThursdayClockEnd(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-label>Friday</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={FridayClockBegin} onChange={(newValue) => setFridayClockBegin(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={FridayClockEnd} onChange={(newValue) => setFridayClockEnd(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-label>Saturday</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={SaturdayClockBegin} onChange={(newValue) => setSaturdayClockBegin(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={SaturdayClockEnd} onChange={(newValue) => setSaturdayClockEnd(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-label>Sunday</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={SundayClockBegin} onChange={(newValue) => setSundayClockBegin(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                    <ion-col>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <TimePicker value={SundayClockEnd} onChange={(newValue) => setSundayClockEnd(newValue!)} />
+                      </MuiPickersUtilsProvider>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>}
               </ion-card-content>
             </ion-card>
           )}
