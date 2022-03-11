@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, Card, useTheme, Image, Button } from '@geist-ui/react';
 import * as Icons from 'react-feather';
+import { deleteBusinessImage } from '../pages/api/backend';
 
 interface Props {
   pictureURL: string;
@@ -12,13 +13,19 @@ export type PictureCardProps = Props;
 const PictureCard: React.FC<PictureCardProps> = ({ pictureURL, pictureName }) => {
   const theme = useTheme();
 
-  const handleDeletePicture = () => {
-    console.log("Yes");
+  const handleDeletePicture = async (imageID:string) => {
+    let response = await deleteBusinessImage([imageID]);
+    if (response.success === undefined) {
+      window.alert("Ah oh, something is wrong. Try again later.")
+    }
+    else {
+      window.alert("Picture Successfully Deleted.");
+    }
   }
 
-  const handleConfirmDeletePicture = () => {
+  const handleConfirmDeletePicture = (pictureURL:string) => {
     if (confirm("Sure to delete this picture?")) {
-      handleDeletePicture();
+      handleDeletePicture(pictureURL.substring(56,92));
     }
     else {
       console.log("Cancel deletion");
@@ -37,7 +44,7 @@ const PictureCard: React.FC<PictureCardProps> = ({ pictureURL, pictureName }) =>
               type='error-light'
               auto
               scale={1/3}
-              onClick={handleConfirmDeletePicture}
+              onClick={() => handleConfirmDeletePicture(pictureURL)}
             />
           </Text>
         </Card>
