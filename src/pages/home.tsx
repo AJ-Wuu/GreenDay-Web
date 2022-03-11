@@ -8,7 +8,7 @@ import UserHeading from '../components/UserHeading';
 import Menu from '../components/navigation/menu';
 import { Grid, useTheme } from '@geist-ui/react';
 import PictureCard from '../components/PictureCard';
-import { getBusinessImages } from './api/backend';
+//import { getBusinessImages } from './api/backend';
 
 var currPictures:any[] = [];
 
@@ -16,11 +16,12 @@ const Home = () => {
   const theme = useTheme();
   const auth = getAuth();
   const [user, setUser] = useState<User | null>(null);
-  const [gallery, setGallery] = useState<boolean>(false);
+  const [gallery, ] = useState<boolean>(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, async (aUser) => {
       setUser(aUser);
+      /*
       let getPictures = await getBusinessImages(aUser?.uid);
       currPictures = getPictures.success;
       if (currPictures === []) {
@@ -29,6 +30,7 @@ const Home = () => {
       else {
         setGallery(true);
       }
+      */
     });
   }, [auth]);
 

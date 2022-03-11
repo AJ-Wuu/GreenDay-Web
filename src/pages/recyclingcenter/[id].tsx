@@ -1,13 +1,14 @@
 import { Grid, Image, Text, useTheme } from "@geist-ui/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Menu from "../../components/navigation/menu";
 import { getBusinessData, getBusinessImages } from "../api/backend";
 
 const RecyclingCenter = (props) => {
   const theme = useTheme();
-  const [gallery, setGallery] = useState<boolean>(false);
+  const [gallery, ] = useState<boolean>(false);
 
+  /*
   useEffect(() => {
     if (props.images === []) {
       setGallery(false);
@@ -16,6 +17,7 @@ const RecyclingCenter = (props) => {
       setGallery(true);
     }
   });
+  */
 
   return (
     <>
