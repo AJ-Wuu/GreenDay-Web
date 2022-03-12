@@ -22,6 +22,7 @@ const Submenu: React.FC = () => {
               <Tabs.Item label="Home" value="/home" />
               <Tabs.Item label="Map" value="/map" />
               <Tabs.Item label="Settings" value="/settings" />
+              <Tabs.Item label="Gallery" value="/gallery" />
             </Tabs>
           </div>
         </div>
