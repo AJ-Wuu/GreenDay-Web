@@ -147,10 +147,11 @@ function getBase64(file:File) {
 
 export const addBusinessImage = async (imageID: any, file: File) => {
   const id_token = await currentUser().getIdToken();
+  const base64 = await getBase64(file);
   let details = {
     id_token: id_token,
     image_id: imageID,
-    image_base64: await getBase64(file),
+    image_base64: base64
   } as any;
 
   const response = await fetch(`${ifDev ? develop : prod}/database/addBusinessImage`, {
@@ -161,14 +162,14 @@ export const addBusinessImage = async (imageID: any, file: File) => {
     },
   });
 
-  return response.json();
+  return response;
 }
 
 export const deleteBusinessImage = async (ids: any[]) => {
   const id_token = await currentUser().getIdToken();
   let details = {
     id_token: id_token,
-    image_ids: ids,
+    image_ids: ids
   } as any;
 
   const response = await fetch(`${ifDev ? develop : prod}/database/deleteBusinessImages`, {
@@ -179,7 +180,7 @@ export const deleteBusinessImage = async (ids: any[]) => {
     },
   });
 
-  return response.json();
+  return response;
 }
 
 export const queryTrashCanLocations = async (lat: number, lng: number) => {

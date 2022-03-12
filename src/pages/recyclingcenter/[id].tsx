@@ -1,26 +1,28 @@
-import { Grid, Image, Text, useTheme } from "@geist-ui/react";
+import { Image, Text, useTheme } from "@geist-ui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Menu from "../../components/navigation/menu";
-import { getBusinessData, getBusinessImages } from "../api/backend";
+import { getBusinessData } from "../api/backend";
+import { Helmet } from 'react-helmet';
 
 const RecyclingCenter = (props) => {
   const theme = useTheme();
-  const [gallery, ] = useState<boolean>(false);
+  const [gallery, setGallery] = useState<boolean>(false);
 
-  /*
   useEffect(() => {
-    if (props.images === []) {
+    if (props.data.pictureURL === "") {
       setGallery(false);
     }
     else {
       setGallery(true);
     }
   });
-  */
 
   return (
     <>
+    <Helmet>
+      <title>GreenDay | Details</title>
+    </Helmet>
     <Menu></Menu>
     <div className="page__wrapper">
       <div className="page__content">
@@ -39,13 +41,7 @@ const RecyclingCenter = (props) => {
         </div>
         <div className="page__wrapper">
           <div className="page__content">
-            <Grid.Container gap={2} marginTop={1} justify="flex-start">
-            {gallery && (props.images.map(picture => (
-              <Grid xs={24} sm={12} md={8}>
-                <Image src={picture}></Image>
-              </Grid>
-            )))}
-          </Grid.Container>
+            {gallery && <Image src={props.data.pictureURL}></Image>}
           </div>
         </div>
       </div>
@@ -90,11 +86,9 @@ const RecyclingCenter = (props) => {
 export async function getStaticProps(context) {
   let uid = context.params.id;
   let data = await getBusinessData(uid);
-  let images = await getBusinessImages(uid);
   return {
     props: {
-      data: data.success,
-      images: images.success
+      data: data.success
     },
   };
 }

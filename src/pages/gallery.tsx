@@ -1,46 +1,71 @@
-import { DropzoneArea } from "material-ui-dropzone";
-import { createStyles, makeStyles } from '@material-ui/core/styles';
 import Menu from "../components/navigation/menu";
-import { Grid, useTheme } from "@geist-ui/react";
+import { useTheme } from "@geist-ui/react";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { addBusinessImage, getBusinessImages } from "./api/backend";
-import { v4 as uuidv4 } from 'uuid';
-import Router from 'next/router';
 import PictureCard from "../components/PictureCard";
 import { Helmet } from 'react-helmet';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import db from '../firebase.config';
+import router from 'next/router';
 
-const useStyles = makeStyles(() => createStyles({
-  previewChip: {
-    minWidth: 160,
-    maxWidth: 210
-  },
-}));
-
-var picture:File;
-var currPictures:any[] = [];
+var data:any;
 
 const Gallery = () => {
   const auth = getAuth();
   const theme = useTheme();
-  const classes = useStyles();
   const [user, setUser] = useState<User | null>(null);
   const [gallery, setGallery] = useState<boolean>(false);
+  const [picture, setPicture] = useState<string>("");
 
   const handleUploadNewPic = async () => {
-    let response = await addBusinessImage(uuidv4(), picture);
-    if (response.success !== undefined || response.success !== null) {
-      Router.reload();
+    data.pictureURL = picture;
+    await setDoc(doc(db, 'business', user!.uid), data)
+      .catch(error => {
+        alert(error);
+    });
+    /*
+    //Deprecated - Using Cloud to store Images
+    if (picture !== []) {
+      let response = await addBusinessImage(uuidv4(), picture[0]);
+      if (response.success !== undefined || response.success !== null) {
+        Router.reload();
+      }
+      else {
+        window.alert("Ah oh, something goes wrong. Please try again later.");
+      }
+    }
+    */
+  }
+
+  const loadData = async (user: User) => {
+    const docRef = doc(db, 'business', user.uid.toString());
+    console.log(docRef);
+    const docSnap = await getDoc(docRef);
+    console.log(docSnap);
+    if (docSnap.exists()) {
+      data = docSnap.data();
+      console.log(data);
+      setPicture(data.pictureURL);
     }
     else {
-      window.alert("Ah oh, something goes wrong. Please try again later.");
+      if (confirm("Please Create Your Business First!") === true) {
+        router.push('./settings');
+      }
     }
-  }
+  };
 
   useEffect(() => {
     onAuthStateChanged(auth, async (aUser) => {
-      console.log(`Auth state changes: ${aUser}`);
       setUser(aUser);
+      if (aUser) {
+        loadData(aUser).then(() => {
+          if (data.pictureURL !== "") {
+            setGallery(true);
+          }
+        });
+      }
+      /*
+      //Deprecated - Using Cloud to store Images
       let getPictures = await getBusinessImages(aUser?.uid);
       currPictures = getPictures.success;
       if (currPictures === [] || currPictures.length === 0) {
@@ -49,6 +74,7 @@ const Gallery = () => {
       else {
         setGallery(true);
       }
+      */
     });
   }, [auth]);
 
@@ -63,31 +89,21 @@ const Gallery = () => {
       <ion-row>
         <ion-col>
           <h3>Your Gallery</h3>
-          <Grid.Container gap={2} marginTop={1} justify="flex-start">
-            {gallery && (currPictures.map(picture => (
-              <Grid xs={24} sm={12} md={8}>
-                <PictureCard
-                  pictureURL={picture}
-                  pictureName={""}
-                />
-              </Grid>
-            )))}
-          </Grid.Container>
+          {gallery && <PictureCard
+              pictureURL={picture}
+              pictureName={""}
+            />
+          }
         </ion-col>
         <ion-col>
           <ion-item>
-            <h3>Upload Pictures To Help People Know Your Business!</h3>
+            <h3>Display Your Best Picture To Show Your Business!</h3>
             <ion-button size="default" shape="round" color="tertiary" onClick={handleUploadNewPic}>Submit</ion-button>
           </ion-item>
-          <DropzoneArea
-            acceptedFiles={['.jpg, .png']}
-            dropzoneText={"Drag and drop an image here or click"}
-            filesLimit={1}
-            previewGridProps={{container: { spacing: 1, direction: 'row' }}}
-            previewChipProps={{classes: { root: classes.previewChip } }}
-            previewText="Selected files"
-            onChange={file => picture = file[0]!}
-          />
+          <ion-item>
+            <ion-label>Enter URL:</ion-label>
+            <ion-textarea rows={6} placeholder="Choose a picture from your website, right click and open image in new tab, then copy the new tab link here. Note that we only support one picture now, but we are working on adding more." onBlur={e => setPicture((e.target as HTMLInputElement).value)}></ion-textarea>
+          </ion-item>
         </ion-col>
       </ion-row>
     </ion-grid></div>
