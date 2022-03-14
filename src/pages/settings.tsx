@@ -140,7 +140,7 @@ const Settings = () => {
      || userDetails.city === "" || userDetails.city === undefined
      || userDetails.state === "" || userDetails.state === undefined
      || userDetails.zipcode === "" || userDetails.zipcode === undefined) {
-      window.alert("Please fill in all required blanks (in red).")
+      window.alert("Please fill in all required blanks (Name, Phone Number, Address and Recycling Types).")
     }
     else {
       handleLatLng(userDetails.location).then(async () => {
@@ -388,7 +388,7 @@ const Settings = () => {
                   <ion-row>
                     <ion-col>
                       <ion-item>
-                        <ion-label class='recyclingTypesLabel' color="danger">Recycling Type(s): </ion-label>
+                        <ion-label class='recyclingTypesLabel' color="danger">Recycling Type(s) Supported: </ion-label>
                         <ion-select
                           class='recyclingTypesSelect'
                           multiple={true}
@@ -406,7 +406,7 @@ const Settings = () => {
                       </ion-item>
                     </ion-col>
                     <ion-col>
-                      <ion-label color='primary'>Other Type(s): </ion-label>
+                      <ion-label color='primary'>Other Type(s) (Not included before): </ion-label>
                       <ion-input placeholder='Split by comma, NO space (eg. Type1,Type2)' onBlur={e => otherTypes = (e.target as HTMLInputElement).value}></ion-input>
                     </ion-col>
                   </ion-row>
