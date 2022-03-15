@@ -57,7 +57,7 @@ const RecyclingCenter = (props) => {
           </ion-card>
         </ion-col>
         <ion-col>
-          {gallery && <Image src={props.data.pictureURL}></Image>}
+          {gallery && <ion-card><Image src={props.data.pictureURL}></Image></ion-card>}
         </ion-col>
       </ion-row>
     </ion-grid>
