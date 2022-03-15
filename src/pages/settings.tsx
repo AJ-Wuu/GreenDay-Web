@@ -89,8 +89,9 @@ const Settings = () => {
 
   const handleDeleteCurrentBusiness = async () => {
     await deleteBusiness().then((response) => {
+      console.log(response);
       if (response.success === undefined) {
-        window.alert("Your business has been deleted. You might not delete it again.")
+        window.alert("You have not created a business or your business has been deleted. You might not delete it again.")
       }
       else {
         if (confirm("Business deleted successfully. You could recreate a business or explore this platform without one.")) {
