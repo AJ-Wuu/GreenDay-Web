@@ -249,7 +249,9 @@ const Settings = () => {
               <ion-grid>
                 <ion-row>
                   <ion-col>
-                    {showDetails && <ion-item><h5 className='heading__user-info'>
+                    {showDetails && <ion-card>
+                      <ion-card-header><h3>Business Details</h3></ion-card-header>
+                      <ion-card-content><h4>
                         Name: {userDetails.name}<br></br>
                         Email: {user.email}<br></br>
                         Phone: {userDetails.phone}<br></br>
@@ -259,10 +261,12 @@ const Settings = () => {
                             {userDetails.website.toString()}
                           </Link><br></br>
                         Recycling Types: {userDetails.recyclingTypes}
-                      </h5></ion-item>}
+                      </h4></ion-card-content></ion-card>}
                   </ion-col>
                   <ion-col>
-                    {(showDetails && userDetails.timeAvailability !== "") ? (<ion-item><h5>
+                    {(showDetails && userDetails.timeAvailability !== "") ? (<ion-card>
+                      <ion-card-header><h3>Time Availability</h3></ion-card-header>
+                      <ion-card-content><h4>
                         {timeArray.at(0)}<br></br>
                         {timeArray.at(1)}<br></br>
                         {timeArray.at(2)}<br></br>
@@ -270,8 +274,8 @@ const Settings = () => {
                         {timeArray.at(4)}<br></br>
                         {timeArray.at(5)}<br></br>
                         {timeArray.at(6)}
-                      </h5></ion-item>) : (
-                        <ion-item><h5>Enter Your Business Today!</h5></ion-item>
+                      </h4></ion-card-content></ion-card>) : (
+                        <ion-card><ion-card-header>Enter Your Business Today!</ion-card-header></ion-card>
                       )}
                   </ion-col>
                   <ion-col>
@@ -565,7 +569,10 @@ const Settings = () => {
       )}
       </div>
       <style jsx>{`
-        h5 {
+        h3 {
+          color: #12732b;
+        }
+        h4 {
           color: #12732b;
         }
         .heading__wrapper {

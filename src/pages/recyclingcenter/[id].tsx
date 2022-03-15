@@ -1,4 +1,4 @@
-import { Image, Text, useTheme } from "@geist-ui/react";
+import { Image, useTheme } from "@geist-ui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Menu from "../../components/navigation/menu";
@@ -24,11 +24,12 @@ const RecyclingCenter = (props) => {
       <title>GreenDay | Details</title>
     </Helmet>
     <Menu></Menu>
-    <div className="page__wrapper">
-      <div className="page__content">
-        <div className='heading__info'>
-          <ion-grid><ion-row>
-            <ion-col><Text h5 className='heading__user-info'>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-card color="success">
+            <ion-card-header><h3>Business Details</h3></ion-card-header>
+            <ion-card-content><h5>
               Name: {props.data.name}<br></br>
               Phone: {props.data.phone}<br></br>
               Address: {props.data.location}<br></br>
@@ -37,8 +38,13 @@ const RecyclingCenter = (props) => {
                 {props.data.website.toString()}
               </Link><br></br>
               Recycling Types: {props.data.recyclingTypes}<br></br>
-            </Text></ion-col>
-            <ion-col><Text h5>
+            </h5></ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col>
+          <ion-card color="success">
+            <ion-card-header><h3>Time Availability</h3></ion-card-header>
+            <ion-card-content><h5>
               {props.time.at(0)}<br></br>
               {props.time.at(1)}<br></br>
               {props.time.at(2)}<br></br>
@@ -47,12 +53,14 @@ const RecyclingCenter = (props) => {
               {props.time.at(5)}<br></br>
               {props.time.at(6)}<br></br>
               {props.time.at(7)}<br></br>
-            </Text></ion-col>
-          </ion-row></ion-grid>
-        </div>
-        {gallery && <Image src={props.data.pictureURL}></Image>}
-      </div>
-    </div>
+            </h5></ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col>
+          {gallery && <Image src={props.data.pictureURL}></Image>}
+        </ion-col>
+      </ion-row>
+    </ion-grid>
     <style jsx>{`
       .page__wrapper {
         background-color: ${theme.palette.accents_1};

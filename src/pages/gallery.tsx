@@ -20,6 +20,9 @@ const Gallery = () => {
   const handleUploadNewPic = async () => {
     data.pictureURL = picture;
     await setDoc(doc(db, 'business', user!.uid), data)
+      .then(() => {
+        setGallery(true);
+      })
       .catch(error => {
         alert(error);
     });
@@ -44,7 +47,6 @@ const Gallery = () => {
     console.log(docSnap);
     if (docSnap.exists()) {
       data = docSnap.data();
-      console.log(data);
       setPicture(data.pictureURL);
     }
     else {
@@ -59,7 +61,7 @@ const Gallery = () => {
       setUser(aUser);
       if (aUser) {
         loadData(aUser).then(() => {
-          if (data !== undefined && data.pictureURL !== "") {
+          if (data !== undefined && data.pictureURL !== undefined && data.pictureURL !== "") {
             setGallery(true);
           }
         });
@@ -89,22 +91,26 @@ const Gallery = () => {
     <div className="page__content"><ion-grid>
       <ion-row>
         <ion-col>
-          <h3 id="gallery">Your Gallery</h3>
-          {gallery && <PictureCard
-              pictureURL={picture}
-              pictureName={""}
-            />
-          }
+          <ion-card>
+            <ion-card-header><h3 id="gallery">Your Gallery</h3></ion-card-header>
+            <ion-card-content>
+              {gallery && <PictureCard
+                pictureURL={picture}
+                pictureName={""}
+              />}
+            </ion-card-content>
+          </ion-card>
         </ion-col>
         <ion-col>
-          <ion-item>
+          <ion-card><ion-card-header><ion-card-title>
             <h3 id="sentence">Display Your Best Picture To Show Your Business!</h3>
-            <ion-button size="default" shape="round" color="tertiary" onClick={handleUploadNewPic}>Submit</ion-button>
-          </ion-item>
-          <ion-item>
+            <ion-card-subtitle></ion-card-subtitle>
+          </ion-card-title></ion-card-header>
+          <ion-card-content>
             <ion-label>Enter URL:</ion-label>
             <ion-textarea rows={7} placeholder="Choose a picture from your website, right click and open image in new tab, then copy the new tab link here." onBlur={e => setPicture((e.target as HTMLInputElement).value)}></ion-textarea>
-          </ion-item>
+            <ion-button slot="end" size="default" shape="round" color="tertiary" onClick={handleUploadNewPic}>Submit</ion-button>
+          </ion-card-content></ion-card>
         </ion-col>
       </ion-row>
     </ion-grid></div>
@@ -133,7 +139,8 @@ const Gallery = () => {
         box-sizing: border-box;
       }
       #gallery {
-        color: #112a12;
+        color: #316745;
+        text-align: center;
       }
       #sentence {
         color: #2c9678;
