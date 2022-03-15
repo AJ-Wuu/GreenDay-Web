@@ -60,7 +60,7 @@ const Menu = () => {
                 href="/home"
                 className={`font-medium text-primary hover:text-secondary`}
               >
-                ACT TODAY
+                ACT NOW
               </a>
             </div>
           </nav>

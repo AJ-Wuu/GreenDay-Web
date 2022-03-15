@@ -72,14 +72,13 @@ const Heading: React.FC<HeadingProps> = ({ user }) => {
         }
         .heading__name :global(.heading__user-name) {
           line-height: 1;
-          color: #20894d;
+          color: #112a12;
         }
         .heading__name :global(.heading__user-role) {
           background: ${theme.palette.accents_1};
           border-color: ${theme.palette.accents_2};
           border-radius: 1rem;
           padding: 0.175rem 0.5rem;
-          height: unset;
           font-size: 0.75rem;
           font-weight: 500;
           text-transform: uppercase;
