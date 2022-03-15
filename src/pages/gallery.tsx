@@ -84,11 +84,12 @@ const Gallery = () => {
       <title>GreenDay | Gallery</title>
     </Helmet>
     <Menu></Menu>
+    <div className="body">
     {user ? (
     <div className="page__content"><ion-grid>
       <ion-row>
         <ion-col>
-          <h3>Your Gallery</h3>
+          <h3 id="gallery">Your Gallery</h3>
           {gallery && <PictureCard
               pictureURL={picture}
               pictureName={""}
@@ -97,12 +98,12 @@ const Gallery = () => {
         </ion-col>
         <ion-col>
           <ion-item>
-            <h3>Display Your Best Picture To Show Your Business!</h3>
+            <h3 id="sentence">Display Your Best Picture To Show Your Business!</h3>
             <ion-button size="default" shape="round" color="tertiary" onClick={handleUploadNewPic}>Submit</ion-button>
           </ion-item>
           <ion-item>
             <ion-label>Enter URL:</ion-label>
-            <ion-textarea rows={6} placeholder="Choose a picture from your website, right click and open image in new tab, then copy the new tab link here. Note that we only support one picture now, but we are working on adding more." onBlur={e => setPicture((e.target as HTMLInputElement).value)}></ion-textarea>
+            <ion-textarea rows={7} placeholder="Choose a picture from your website, right click and open image in new tab, then copy the new tab link here." onBlur={e => setPicture((e.target as HTMLInputElement).value)}></ion-textarea>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -119,6 +120,7 @@ const Gallery = () => {
           ></ion-progress-bar>
         </>
       )}
+    </div>
     <style jsx>{`
       .page__content {
         display: flex;
@@ -130,8 +132,16 @@ const Gallery = () => {
         padding: calc(${theme.layout.unit} * 2) ${theme.layout.pageMargin};
         box-sizing: border-box;
       }
-      h3,h4 {
+      #gallery {
+        color: #112a12;
+      }
+      #sentence {
         color: #2c9678;
+      }
+      .body {
+        height: calc(100vh - 102px);
+        background-image: url('/assets/images/background.jpg');
+        background-size: cover;
       }
       `}</style>
     </>

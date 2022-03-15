@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Avatar, Button, Text, useTheme } from '@geist-ui/react';
+import { Button, Text, useTheme } from '@geist-ui/react';
 import {
   getAuth,
   User,
@@ -40,7 +40,6 @@ type business_data = {
   lng: number
 }
 
-let avatarSrc: string = "";
 let otherTypes: string = "";
 var userDetails:business_data = {
   name: '',
@@ -59,6 +58,7 @@ var userDetails:business_data = {
   website: '',
   recyclingTypes: ''
 };
+var timeArray:string[] = [];
 
 const Settings = () => {
   const auth = getAuth();
@@ -224,15 +224,11 @@ const Settings = () => {
     onAuthStateChanged(auth, (aUser) => {
       setUser(aUser);
       if (aUser) {
-        if (aUser.photoURL !== null) {
-          avatarSrc = aUser.photoURL;
-        }
-        else {
-          avatarSrc = "/assets/images/userLogo.jpg";
-        }
         loadData(aUser).then(() => {
+          timeArray = userDetails.timeAvailability.split('; ');
+        }).then(() => {
           setShowDetails(true);
-        });
+        });;
       }
     });
   }, [auth]);
@@ -243,45 +239,52 @@ const Settings = () => {
         <title>GreenDay | Settings</title>
       </Helmet>
       <Menu></Menu>
-      {user ? (
+      <div className='body'>
+        {user ? (
         <>
-          <div className="heading__wrapper">
-            <div className="heading">
-              <Avatar alt="Your Avatar" className="heading__user-avatar" src={avatarSrc} />
-              <div className="heading__name">
-                <div className="heading__title">
-                  <Text h2 className="heading__user-name">
-                    {user.displayName}
-                  </Text>
-              
-                  {showDetails && <div className='heading__info'>
-                    <Text h5 className='heading__user-info'>
-                      Name: {userDetails.name}<br></br>
-                      Email: {user.email}<br></br>
-                      Phone: {userDetails.phone}<br></br>
-                      Address: {userDetails.location}<br></br>
-                      Time Availability: {userDetails.timeAvailability}<br></br>
-                      Website:{' '}
-                        <Link href={userDetails.website!} passHref={true}>
-                          {userDetails.website.toString()}
-                        </Link><br></br>
-                      Recycling Types: {userDetails.recyclingTypes}<br></br>
-                    </Text>
-                  </div>}
-
-                  <div className="heading__actions">
-                    <Button type="success" auto onClick={handleTriggerUpdate}>
-                      Update Business Info
-                    </Button>
-                    <h5></h5>
-                    <Button type="success" auto onClick={handleTriggerDelete}>
-                      Delete Current Business
-                    </Button>
-                  </div>
-                </div>
-              </div>
+          <div className='heading__wrapper'>
+            <div className='heading'>
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    {showDetails && <Text h5 className='heading__user-info'>
+                        Name: {userDetails.name}<br></br>
+                        Email: {user.email}<br></br>
+                        Phone: {userDetails.phone}<br></br>
+                        Address: {userDetails.location}<br></br>
+                        Website:{' '}
+                          <Link href={userDetails.website!} passHref={true}>
+                            {userDetails.website.toString()}
+                          </Link><br></br>
+                        Recycling Types: {userDetails.recyclingTypes}
+                      </Text>}
+                  </ion-col>
+                  <ion-col>
+                    {showDetails && <Text h5>
+                        {timeArray.at(0)}<br></br>
+                        {timeArray.at(1)}<br></br>
+                        {timeArray.at(2)}<br></br>
+                        {timeArray.at(3)}<br></br>
+                        {timeArray.at(4)}<br></br>
+                        {timeArray.at(5)}<br></br>
+                        {timeArray.at(6)}
+                      </Text>}
+                  </ion-col>
+                  <ion-col>
+                    <div className="heading__actions">
+                      <Button type="success" auto onClick={handleTriggerUpdate}>
+                        Update Business Info
+                      </Button>
+                      <h5></h5>
+                      <Button type="success" auto onClick={handleTriggerDelete}>
+                        Delete Current Business
+                      </Button>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
             </div>
-          </div>
+          </div>    
           {userInfoUpdate && (
             <ion-card class='user-info-update'>
               <ion-card-header>
@@ -556,8 +559,10 @@ const Settings = () => {
           ></ion-progress-bar>
         </>
       )}
+      </div>
       <style jsx>{`
         .heading__wrapper {
+          height: 100% !important;
           border-bottom: 0px solid ${theme.palette.border};
         }
         .heading {
@@ -568,11 +573,6 @@ const Settings = () => {
           margin: 0 auto;
           padding: calc(${theme.layout.gap} * 2) ${theme.layout.pageMargin} calc(${theme.layout.gap} * 4);
           box-sizing: border-box;
-        }
-        .heading :global(.heading__user-avatar) {
-          height: 100px;
-          width: 100px;
-          margin-right: ${theme.layout.gap};
         }
         .heading__title {
           display: flex;
@@ -593,17 +593,15 @@ const Settings = () => {
         .heading__info {
           display: flex;
           flex-direction: column;
-          justify-content: center;
+          justify-content: left;
           flex: 1;
-          margin-left: 20px;
-          margin-right: 20px;
-          color: #2c9678;
+          color: #112a12;
         }
         .heading__info :global(.heading__user-info) {
           line-height: 1;
         }
         .heading__actions {
-          margin-left: auto;
+          margin-left: 280px;
         }
         .heading__integration :global(.heading__integration-title) {
           color: ${theme.palette.accents_5} !important;
@@ -619,6 +617,12 @@ const Settings = () => {
         }
         .heading__integration-inner :global(svg) {
           margin-right: ${theme.layout.gapQuarter};
+        }
+        .body {
+          height: calc(100vh - 102px);
+          background-image: url("/assets/images/background.jpg");
+          backgroundRepeat: "no-repeat";
+          background-size: 100%;
         }
       `}</style>
     </>

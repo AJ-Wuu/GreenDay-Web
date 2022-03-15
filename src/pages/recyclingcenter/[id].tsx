@@ -27,23 +27,30 @@ const RecyclingCenter = (props) => {
     <div className="page__wrapper">
       <div className="page__content">
         <div className='heading__info'>
-          <Text h5 className='heading__user-info'>
-            Name: {props.data.name}<br></br>
-            Phone: {props.data.phone}<br></br>
-            Address: {props.data.location}<br></br>
-            Time Availability: {props.data.timeAvailability}<br></br>
-            Website:{' '}
-            <Link href={props.data.website!} passHref={true}>
-              {props.data.website.toString()}
-            </Link><br></br>
-            Recycling Types: {props.data.recyclingTypes}<br></br>
-          </Text>
+          <ion-grid><ion-row>
+            <ion-col><Text h5 className='heading__user-info'>
+              Name: {props.data.name}<br></br>
+              Phone: {props.data.phone}<br></br>
+              Address: {props.data.location}<br></br>
+              Website:{' '}
+              <Link href={props.data.website!} passHref={true}>
+                {props.data.website.toString()}
+              </Link><br></br>
+              Recycling Types: {props.data.recyclingTypes}<br></br>
+            </Text></ion-col>
+            <ion-col><Text h5>
+              {props.time.at(0)}<br></br>
+              {props.time.at(1)}<br></br>
+              {props.time.at(2)}<br></br>
+              {props.time.at(3)}<br></br>
+              {props.time.at(4)}<br></br>
+              {props.time.at(5)}<br></br>
+              {props.time.at(6)}<br></br>
+              {props.time.at(7)}<br></br>
+            </Text></ion-col>
+          </ion-row></ion-grid>
         </div>
-        <div className="page__wrapper">
-          <div className="page__content">
-            {gallery && <Image src={props.data.pictureURL}></Image>}
-          </div>
-        </div>
+        {gallery && <Image src={props.data.pictureURL}></Image>}
       </div>
     </div>
     <style jsx>{`
@@ -86,9 +93,11 @@ const RecyclingCenter = (props) => {
 export async function getStaticProps(context) {
   let uid = context.params.id;
   let data = await getBusinessData(uid);
+  let timeArray = data.success.timeAvailability.split('; ');
   return {
     props: {
-      data: data.success
+      data: data.success,
+      time: timeArray
     },
   };
 }

@@ -24,21 +24,31 @@ const Home = () => {
       <title>GreenDay | Home</title>
     </Helmet>
     <Menu></Menu>
-    {user ? (
-      <>
-        {(user?.displayName !== undefined) && <UserHeading user={{ name: user?.displayName!, avatarSrc: user.photoURL }} />}
-      </>) : (
-      <>
-        <ion-progress-bar type="indeterminate"></ion-progress-bar>
-        <ion-chip color="secondary">
-          <ion-label color="dark">Please Sign In</ion-label>
-        </ion-chip>
-        <ion-progress-bar
-          type="indeterminate"
-          reversed={true}
-        ></ion-progress-bar>
-      </>
-    )}
+    <div className='body'>
+      {user ? (
+        <>
+          {(user?.displayName !== undefined) && <UserHeading user={{ name: user?.displayName!, avatarSrc: user.photoURL }} />}
+        </>) : (
+        <>
+          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          <ion-chip color="secondary">
+            <ion-label color="dark">Please Sign In</ion-label>
+          </ion-chip>
+          <ion-progress-bar
+            type="indeterminate"
+            reversed={true}
+          ></ion-progress-bar>
+        </>
+      )}
+    </div>
+    <style jsx>{`
+      .body {
+        height: calc(100vh - 102px);
+        background-image: url("/assets/images/background.jpg");
+        backgroundRepeat: "no-repeat";
+        background-size: cover;
+      }
+    `}</style>
     </>
   );
 };
