@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Text, useTheme } from '@geist-ui/react';
+import { Button, useTheme } from '@geist-ui/react';
 import {
   getAuth,
   User,
@@ -139,8 +139,9 @@ const Settings = () => {
      || userDetails.street === "" || userDetails.street === undefined
      || userDetails.city === "" || userDetails.city === undefined
      || userDetails.state === "" || userDetails.state === undefined
-     || userDetails.zipcode === "" || userDetails.zipcode === undefined) {
-      window.alert("Please fill in all required blanks (Name, Phone Number, Address and Recycling Types).")
+     || userDetails.zipcode === "" || userDetails.zipcode === undefined
+     || userDetails.timeAvailability === "" || userDetails.timeAvailability === undefined) {
+      window.alert("Please fill in all required blanks (Name, Phone Number, Address, Recycling Types, and Time Availability).")
     }
     else {
       handleLatLng(userDetails.location).then(async () => {
@@ -247,7 +248,7 @@ const Settings = () => {
               <ion-grid>
                 <ion-row>
                   <ion-col>
-                    {showDetails && <Text h5 className='heading__user-info'>
+                    {showDetails && <ion-item><h5 className='heading__user-info'>
                         Name: {userDetails.name}<br></br>
                         Email: {user.email}<br></br>
                         Phone: {userDetails.phone}<br></br>
@@ -257,10 +258,10 @@ const Settings = () => {
                             {userDetails.website.toString()}
                           </Link><br></br>
                         Recycling Types: {userDetails.recyclingTypes}
-                      </Text>}
+                      </h5></ion-item>}
                   </ion-col>
                   <ion-col>
-                    {showDetails && <Text h5>
+                    {(showDetails && userDetails.timeAvailability !== "") ? (<ion-item>
                         {timeArray.at(0)}<br></br>
                         {timeArray.at(1)}<br></br>
                         {timeArray.at(2)}<br></br>
@@ -268,7 +269,9 @@ const Settings = () => {
                         {timeArray.at(4)}<br></br>
                         {timeArray.at(5)}<br></br>
                         {timeArray.at(6)}
-                      </Text>}
+                      </ion-item>) : (
+                        <ion-item><h5>Enter Your Business Today!</h5></ion-item>
+                      )}
                   </ion-col>
                   <ion-col>
                     <div className="heading__actions">
@@ -416,7 +419,7 @@ const Settings = () => {
                   <ion-row>
                     <ion-col>
                       <ion-item>
-                        <ion-label class="ion-text-wrap" color="primary" placeholder='e.g. MTWRF 9am - 5pm'>
+                        <ion-label class="ion-text-wrap" color="danger" placeholder='e.g. MTWRF 9am - 5pm'>
                           Time Availability:{' '}
                         </ion-label>
                         <ion-button onClick={() => setShowClocks(true)}>Click Here to Choose</ion-button>
@@ -561,6 +564,9 @@ const Settings = () => {
       )}
       </div>
       <style jsx>{`
+        h5 {
+          color: #12732b;
+        }
         .heading__wrapper {
           height: 100% !important;
           border-bottom: 0px solid ${theme.palette.border};
@@ -588,20 +594,17 @@ const Settings = () => {
         }
         .heading__name :global(.heading__user-name) {
           line-height: 1;
-          color: #20894d;
+          color: #05480d;
         }
         .heading__info {
           display: flex;
           flex-direction: column;
           justify-content: left;
           flex: 1;
-          color: #112a12;
-        }
-        .heading__info :global(.heading__user-info) {
-          line-height: 1;
+          color: #05480d;
         }
         .heading__actions {
-          margin-left: 280px;
+          text-align: center;
         }
         .heading__integration :global(.heading__integration-title) {
           color: ${theme.palette.accents_5} !important;
