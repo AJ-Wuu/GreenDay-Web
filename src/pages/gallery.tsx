@@ -59,7 +59,7 @@ const Gallery = () => {
       setUser(aUser);
       if (aUser) {
         loadData(aUser).then(() => {
-          if (data.pictureURL !== "") {
+          if (data !== undefined && data.pictureURL !== "") {
             setGallery(true);
           }
         });
