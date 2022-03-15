@@ -71,7 +71,7 @@ const Menu: React.FC = () => {
     <GeistProvider themeType={themeType}>
       <CssBaseline />
       <nav className="theme-nav">
-        <h1 className="theme-title" onClick={() => router.push("/")}>Green Day - RecycleMe Global</h1>
+        <img src='/assets/images/logo.png' alt='logo' id='logo' onClick={() => router.push("/")}></img>
         <div>
           <Button
             className="theme-button"
@@ -83,14 +83,14 @@ const Menu: React.FC = () => {
           <Button
             id="login-button"
             auto
-            type="abort"
+            type="success"
             disabled={loggedIn}
             onClick={handleSignInRequest}
           >LOG IN</Button>
           <Button
             id="logout-button"
             auto
-            type="abort"
+            type="success"
             disabled={!loggedIn}
             onClick={handleSignOutRequest}
           >LOG OUT</Button>
@@ -129,6 +129,10 @@ const Menu: React.FC = () => {
           height: 2.25rem;
           padding: 0;
           margin: 0 ${theme.layout.gapHalf};
+        }
+        #logo {
+          text-align: left;
+          height: 56px;
         }
       `}</style>
     </GeistProvider>
