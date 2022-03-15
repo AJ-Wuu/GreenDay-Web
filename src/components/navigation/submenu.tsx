@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Tabs, useTheme } from '@geist-ui/react';
+import { useTheme } from '@geist-ui/react';
 
 const Submenu: React.FC = () => {
   const theme = useTheme();
@@ -18,12 +18,24 @@ const Submenu: React.FC = () => {
       <nav className="submenu__wrapper">
         <div className={`submenu ${sticky ? 'submenu_sticky' : ''}`}>
           <div className="submenu__inner">
-            <Tabs value={router.asPath} onChange={(route) => router.push(route)}>
-              <Tabs.Item label="Home" value="/home" />
-              <Tabs.Item label="Map" value="/map" />
-              <Tabs.Item label="Settings" value="/settings" />
-              <Tabs.Item label="Gallery" value="/gallery" />
-            </Tabs>
+            <ion-tabs><ion-tab-bar>
+              <ion-tab-button tab='home' onClick={() => router.push('/home')}>
+                <ion-icon src='/assets/images/home.svg'></ion-icon>
+                <ion-label>HOME</ion-label>
+              </ion-tab-button>
+              <ion-tab-button tab='map' onClick={() => router.push('/map')}>
+                <ion-icon src='/assets/images/map.svg'></ion-icon>
+                <ion-label>MAP</ion-label>
+              </ion-tab-button>
+              <ion-tab-button tab='settings' onClick={() => router.push('/settings')}>
+                <ion-icon src='/assets/images/settings.svg'></ion-icon>
+                <ion-label>SETTINGS</ion-label>
+              </ion-tab-button>
+              <ion-tab-button tab='gallery' onClick={() => router.push('/gallery')}>
+                <ion-icon src='/assets/images/gallery.svg'></ion-icon>
+                <ion-label>GALLERY</ion-label>
+              </ion-tab-button>
+            </ion-tab-bar></ion-tabs>
           </div>
         </div>
       </nav>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Button, CssBaseline, GeistProvider, useTheme } from '@geist-ui/react';
-import * as Icons from 'react-feather';
 import Submenu from './submenu';
 import {
   getAuth,
@@ -20,11 +19,7 @@ const Menu: React.FC = () => {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [themeType, setThemeType] = useState('light')
-  
-  const switchThemes = () => {
-    setThemeType(last => (last === 'dark' ? 'light' : 'dark'))
-  }
+  const [themeType, ] = useState('light')
 
   const handleSignInRequest = () => {
       signInWithPopup(auth, provider)
@@ -73,13 +68,6 @@ const Menu: React.FC = () => {
       <nav className="theme-nav">
         <img src='/assets/images/logo.png' alt='logo' id='logo' onClick={() => router.push("/")}></img>
         <div>
-          <Button
-            className="theme-button"
-            auto
-            type="abort"
-            onClick={switchThemes}
-          >{theme.type === 'dark' ? <Icons.Sun size={16} /> : <Icons.Moon size={16} />}
-          </Button>
           <Button
             id="login-button"
             auto
