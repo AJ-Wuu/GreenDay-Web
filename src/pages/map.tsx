@@ -116,7 +116,7 @@ const LoadMap = () => {
             state.markers = [];
             businessIDs.success.forEach(async (businessID) => {
               await getBusinessData(businessID).then((businessData) => {
-                let websiteURL = (businessData.success.website === null || businessData.success.website === undefined) ? new URL("https://green-day-web.vercel.app/404") : new URL(businessData.success.website);
+                let websiteURL = (businessData.success.website === null || businessData.success.website === undefined || businessData.success.website === "") ? new URL("https://green-day-web.vercel.app/404") : new URL(businessData.success.website);
                 let currMarker:MarkerInfo = {
                   name: businessData.success.name,
                   recyclingTypes: businessData.success.recyclingTypes,

@@ -261,7 +261,7 @@ const Settings = () => {
                       </h5></ion-item>}
                   </ion-col>
                   <ion-col>
-                    {(showDetails && userDetails.timeAvailability !== "") ? (<ion-item>
+                    {(showDetails && userDetails.timeAvailability !== "") ? (<ion-item><h5>
                         {timeArray.at(0)}<br></br>
                         {timeArray.at(1)}<br></br>
                         {timeArray.at(2)}<br></br>
@@ -269,7 +269,7 @@ const Settings = () => {
                         {timeArray.at(4)}<br></br>
                         {timeArray.at(5)}<br></br>
                         {timeArray.at(6)}
-                      </ion-item>) : (
+                      </h5></ion-item>) : (
                         <ion-item><h5>Enter Your Business Today!</h5></ion-item>
                       )}
                   </ion-col>
