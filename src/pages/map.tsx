@@ -150,24 +150,32 @@ const LoadMap = () => {
     }
   };
 
+  function attachUserMessage(marker: google.maps.Marker) {
+    let infowindow = new google.maps.InfoWindow({
+      content: "<ion-item><ion-label>You are HERE</ion-label></ion-item>"
+    })
+    marker.addListener("click", () => {
+      infowindow.open(marker.get("map"), marker);
+    });
+  }
+
   function attachSecretMessage(marker: google.maps.Marker, secretMessage: MarkerInfo) {
     let infowindow;
     if (secretMessage.category === "RecyclingCenter") {
       infowindow = new google.maps.InfoWindow({
         content: 
-          "<p><b>" + secretMessage.name + "</b></p>" + 
-          "<p>Recycling: <b>" + secretMessage.recyclingTypes + "</b></p>" + 
-          "<p>Address: <b>" + secretMessage.location + "</b></p>" + 
-          "<p>Phone: <b>" + secretMessage.phone + "</b></p>" + 
-          "<p>Website: <b><a href=" + secretMessage.website + ">" + secretMessage.website + "</a></b></p>" +
-          "<p><a href=\"http://green-day-web.vercel.app/recyclingcenter/" + secretMessage.uid + "\" target=\"_blank\">" + "<strong>Click Here to Check Out More</strong></a></p>",
+          "<ion-title><strong>" + secretMessage.name + "</strong></ion-title>" + 
+          "<ion-item><ion-label>Phone: " + secretMessage.phone + "</ion-label></ion-item>" + 
+          "<ion-item><ion-label>Address: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + secretMessage.location + "\"></ion-textarea></ion-item>" + 
+          "<ion-item><ion-label><a href=\"http://green-day-web.vercel.app/recyclingcenter/" + secretMessage.uid + "\" target=\"_blank\">Internal Website</a></ion-label></ion-item>" +
+          "<ion-item><ion-label><a href=" + secretMessage.website + " target=\"_blank\">External Website</a></ion-label></ion-item>",
         maxWidth: 300
       });
     }
     else if (secretMessage.category === "TrashCan") {
       infowindow = new google.maps.InfoWindow({
         content: 
-          "<p>Photo taken on: <b>" + secretMessage.name + "</b></p>" + 
+          "<ion-item><ion-label>Taken on: " + secretMessage.name + "</ion-label></ion-item>" +
           "<img src='" + secretMessage.pictureURL + "' width='200' height='100'>",
         maxWidth: 300
       });
@@ -181,10 +189,21 @@ const LoadMap = () => {
   function handleDrawMarkers(markers:any[]) {
     const bounds = new google.maps.LatLngBounds();
 
+    const userMarker = new google.maps.Marker({
+      position: { lat: userLat, lng: userLng },
+      map,
+      icon: {                             
+          url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+        }
+    });
+    bounds.extend(new google.maps.LatLng(userLat, userLng));
+    attachUserMessage(userMarker);
+    
+
     markers.forEach((markerInfo:MarkerInfo) => {
       const marker = new google.maps.Marker({
         position: { lat: markerInfo.lat, lng: markerInfo.lng},
-        map,
+        map
       });
       bounds.extend(markerInfo);
       attachSecretMessage(marker, markerInfo);
@@ -206,15 +225,12 @@ const LoadMap = () => {
           },
           {
             featureType: 'poi',
+            elementType: 'labels.icon',
             stylers: [{ visibility: 'off' }],
           },
           {
             featureType: 'road',
             elementType: 'labels.icon',
-            stylers: [{ visibility: 'off' }],
-          },
-          {
-            featureType: 'transit',
             stylers: [{ visibility: 'off' }],
           },
         ],
