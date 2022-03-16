@@ -10,6 +10,7 @@ const RecyclingCenter = (props) => {
   const [gallery, setGallery] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log(props);
     if (props.data.pictureURL === "") {
       setGallery(false);
     }
