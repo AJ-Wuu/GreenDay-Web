@@ -230,8 +230,7 @@ const LoadMap = () => {
             stylers: [{ visibility: 'off' }],
           },
           {
-            featureType: 'poi',
-            elementType: 'labels.icon',
+            featureType: 'poi.business',
             stylers: [{ visibility: 'off' }],
           },
           {
