@@ -12,7 +12,7 @@ Geocode.setApiKey(process.env.GEOCODE_API_KEY!);
 
 type MarkerInfo = {
   name: string;
-  recyclingTypes: string | URL;
+  recyclingTypes: string;
   location: string;
   pictureURL: string;
   phone: string;
@@ -21,6 +21,7 @@ type MarkerInfo = {
   lat: number;
   lng: number;
   uid: string;
+  timeAvailability: string;
 }
 
 let map: google.maps.Map;
@@ -88,7 +89,8 @@ const LoadMap = () => {
                   category: "TrashCan",
                   lat: parseFloat(trashcanDetails[0][i].latitude),
                   lng: parseFloat(trashcanDetails[0][i].longitude),
-                  uid: ""
+                  uid: "",
+                  timeAvailability: ""
                 }
                 console.log(currMarker);
                 state.markers.push(currMarker);
@@ -127,7 +129,8 @@ const LoadMap = () => {
                   category: "RecyclingCenter",
                   lat: businessData.success.lat,
                   lng: businessData.success.lng,
-                  uid: businessID
+                  uid: businessID,
+                  timeAvailability: businessData.success.timeAvailability
                 }
                 state.markers.push(currMarker);
               });
@@ -161,15 +164,18 @@ const LoadMap = () => {
 
   function attachSecretMessage(marker: google.maps.Marker, secretMessage: MarkerInfo) {
     let infowindow;
+    let recycling = secretMessage.recyclingTypes.replace(/,/g, '\n'); //'g' for global
+    let workingday = secretMessage.timeAvailability.replace(/; /g, '\n');
     if (secretMessage.category === "RecyclingCenter") {
       infowindow = new google.maps.InfoWindow({
         content: 
-          "<ion-title><strong>" + secretMessage.name + "</strong></ion-title>" + 
+          "<ion-title color=\"success\">" + secretMessage.name + "</ion-title>" + 
           "<ion-item><ion-label>Phone: " + secretMessage.phone + "</ion-label></ion-item>" + 
           "<ion-item><ion-label>Address: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + secretMessage.location + "\"></ion-textarea></ion-item>" + 
-          "<ion-item><ion-label><a href=\"http://green-day-web.vercel.app/recyclingcenter/" + secretMessage.uid + "\" target=\"_blank\">Internal Website</a></ion-label></ion-item>" +
-          "<ion-item><ion-label><a href=" + secretMessage.website + " target=\"_blank\">External Website</a></ion-label></ion-item>",
-        maxWidth: 300
+          "<ion-item><ion-label>Recycle: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + recycling + "\"></ion-textarea></ion-item>" +
+          "<ion-item><ion-label>Working: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + workingday + "\"></ion-textarea></ion-item>" +
+          "<ion-item><ion-label><a href=" + secretMessage.website + " target=\"_blank\">External Website</a></ion-label></ion-item>" +
+          "<img src='" + secretMessage.pictureURL + "' width='300'>"
       });
     }
     else if (secretMessage.category === "TrashCan") {
@@ -285,6 +291,9 @@ const LoadMap = () => {
       </StyledMap>
     </div>
     <style jsx>{`
+      strong {
+        color: green;
+      }
       #search-bar {
         text-align: center;
         display: flex;
