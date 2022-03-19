@@ -7,6 +7,7 @@ import {
 import UserHeading from '../components/UserHeading';
 import Menu from '../components/navigation/menu';
 import { Helmet } from 'react-helmet';
+import SignInAlert from '../components/SignInAlert';
 
 const Home = () => {
   const auth = getAuth();
@@ -30,14 +31,7 @@ const Home = () => {
           {(user?.displayName !== undefined) && <UserHeading user={{ name: user?.displayName!, avatarSrc: user.photoURL }} />}
         </>) : (
         <>
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
-          <ion-chip color="secondary">
-            <ion-label color="dark">Please Sign In</ion-label>
-          </ion-chip>
-          <ion-progress-bar
-            type="indeterminate"
-            reversed={true}
-          ></ion-progress-bar>
+          <SignInAlert></SignInAlert>
         </>
       )}
     </div>

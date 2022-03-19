@@ -19,6 +19,7 @@ import PhoneInput from 'react-phone-number-input'
 import DateFnsUtils from '@date-io/date-fns'; // choose your lib
 import { MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
 import { Helmet } from 'react-helmet';
+import SignInAlert from '../components/SignInAlert';
 
 Geocode.setApiKey(process.env.GEOCODE_API_KEY!);
 
@@ -557,14 +558,7 @@ const Settings = () => {
         </>
       ) : (
         <>
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
-          <ion-chip color="secondary">
-            <ion-label color="dark">Please Sign In</ion-label>
-          </ion-chip>
-          <ion-progress-bar
-            type="indeterminate"
-            reversed={true}
-          ></ion-progress-bar>
+          <SignInAlert></SignInAlert>
         </>
       )}
       </div>

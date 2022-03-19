@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import db from '../firebase.config';
 import router from 'next/router';
+import SignInAlert from "../components/SignInAlert";
 
 var data:any;
 
@@ -116,14 +117,7 @@ const Gallery = () => {
     </ion-grid></div>
     ) : (
         <>
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
-          <ion-chip color="secondary">
-            <ion-label color="dark">Please Sign In</ion-label>
-          </ion-chip>
-          <ion-progress-bar
-            type="indeterminate"
-            reversed={true}
-          ></ion-progress-bar>
+          <SignInAlert></SignInAlert>
         </>
       )}
     </div>
