@@ -31,7 +31,7 @@ const loader = new Loader({
 });
 var varMarkers:MarkerInfo[] = [];
 var state = {
-  defaultCenter: { lat: 39.87154121541584, lng: -102.955994347825 },
+  defaultCenter: { lat: 0, lng: 0 },
   markers: varMarkers
 }
 var address:string = "";
@@ -259,7 +259,7 @@ const LoadMap = () => {
         document.getElementById('google-map') as HTMLElement,
         {
           center: state.defaultCenter,
-          zoom: 4,
+          zoom: 2,
           mapTypeControlOptions: {
             mapTypeIds: [
               'roadmap',
