@@ -167,16 +167,29 @@ const LoadMap = () => {
     let recycling = secretMessage.recyclingTypes.replace(/,/g, '\n'); //'g' for global
     let workingday = secretMessage.timeAvailability.replace(/; /g, '\n');
     if (secretMessage.category === "RecyclingCenter") {
-      infowindow = new google.maps.InfoWindow({
-        content: 
-          "<ion-title color=\"success\">" + secretMessage.name + "</ion-title>" + 
-          "<ion-item><ion-label>Phone: " + secretMessage.phone + "</ion-label></ion-item>" + 
-          "<ion-item><ion-label>Address: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + secretMessage.location + "\"></ion-textarea></ion-item>" + 
-          "<ion-item><ion-label>Recycle: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + recycling + "\"></ion-textarea></ion-item>" +
-          "<ion-item><ion-label>Working: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + workingday + "\"></ion-textarea></ion-item>" +
-          "<ion-item><ion-label><a href=" + secretMessage.website + " target=\"_blank\">External Website</a></ion-label></ion-item>" +
-          "<img src='" + secretMessage.pictureURL + "' width='300'>"
-      });
+      if (secretMessage.pictureURL === undefined || secretMessage.pictureURL === "") {
+        infowindow = new google.maps.InfoWindow({
+          content: 
+            "<ion-title color=\"success\">" + secretMessage.name + "</ion-title>" + 
+            "<ion-item><ion-label>Phone: " + secretMessage.phone + "</ion-label></ion-item>" + 
+            "<ion-item><ion-label>Address: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + secretMessage.location + "\"></ion-textarea></ion-item>" + 
+            "<ion-item><ion-label>Recycle: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + recycling + "\"></ion-textarea></ion-item>" +
+            "<ion-item><ion-label>Working: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + workingday + "\"></ion-textarea></ion-item>" +
+            "<ion-item><ion-label><a href=" + secretMessage.website + " target=\"_blank\">External Website</a></ion-label></ion-item>"
+        });
+      }
+      else {
+        infowindow = new google.maps.InfoWindow({
+          content: 
+            "<ion-title color=\"success\">" + secretMessage.name + "</ion-title>" + 
+            "<ion-item><ion-label>Phone: " + secretMessage.phone + "</ion-label></ion-item>" + 
+            "<ion-item><ion-label>Address: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + secretMessage.location + "\"></ion-textarea></ion-item>" + 
+            "<ion-item><ion-label>Recycle: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + recycling + "\"></ion-textarea></ion-item>" +
+            "<ion-item><ion-label>Working: </ion-label><ion-textarea readonly class=\"ion-text-wrap\" value=\"" + workingday + "\"></ion-textarea></ion-item>" +
+            "<ion-item><ion-label><a href=" + secretMessage.website + " target=\"_blank\">External Website</a></ion-label></ion-item>" +
+            "<img src='" + secretMessage.pictureURL + "' width='300'>"
+        });
+      }
     }
     else if (secretMessage.category === "TrashCan") {
       infowindow = new google.maps.InfoWindow({
@@ -272,7 +285,7 @@ const LoadMap = () => {
   return (
     <>
     <Helmet>
-      <title>GreenDay | Map</title>
+      <title>RecycleMe | Map</title>
     </Helmet>
     <div>
       <ion-header class="ion-no-border">

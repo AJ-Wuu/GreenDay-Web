@@ -22,7 +22,7 @@ const Home = () => {
   return (
     <>
     <Helmet>
-      <title>GreenDay | Home</title>
+      <title>RecycleMe | Home</title>
     </Helmet>
     <Menu></Menu>
     <div className='body'>

@@ -14,7 +14,7 @@ const App = () => {
   return (
     <>
     <Helmet>
-      <title>GreenDay</title>
+      <title>RecycleMe</title>
     </Helmet>
     <div className={`bg-background grid gap-y-16 overflow-hidden`}>
       <div className={`relative bg-background`}>

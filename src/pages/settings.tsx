@@ -239,7 +239,7 @@ const Settings = () => {
   return (
     <>
       <Helmet>
-        <title>GreenDay | Settings</title>
+        <title>RecycleMe | Settings</title>
       </Helmet>
       <Menu></Menu>
       <div className='body'>

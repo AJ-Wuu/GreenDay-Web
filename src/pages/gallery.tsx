@@ -84,7 +84,7 @@ const Gallery = () => {
   return (
     <>
     <Helmet>
-      <title>GreenDay | Gallery</title>
+      <title>RecycleMe | Gallery</title>
     </Helmet>
     <Menu></Menu>
     <div className="body">
