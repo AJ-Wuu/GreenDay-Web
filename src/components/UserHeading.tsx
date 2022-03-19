@@ -50,7 +50,7 @@ const Heading: React.FC<HeadingProps> = ({ user }) => {
           width: ${theme.layout.pageWidthWithMargin};
           max-width: 100%;
           margin: 0 auto;
-          padding: calc(${theme.layout.gap} * 2) ${theme.layout.pageMargin} calc(${theme.layout.gap} * 4);
+          padding: calc(${theme.layout.gap} * 2) calc(${theme.layout.pageMargin} * 8) calc(${theme.layout.gap} * 4);
           box-sizing: border-box;
         }
         .heading :global(.heading__user-avatar) {
