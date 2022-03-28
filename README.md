@@ -5,7 +5,7 @@
         <img src="./README/GooglePlay.png" alt="GooglePlay" width="150"/>
     </a>
     <a href="https://apps.apple.com/us/app/recycleme-usa/id1615887126">
-        <img src="./README/AppStore.png" alt="AppleStore" width="150"/>
+        <img src="./README/AppleStore.png" alt="AppleStore" width="150"/>
     </a>
 </div>
 
