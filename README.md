@@ -1,35 +1,20 @@
 # Green Day - RecycleMe - Web App
 ## Demo: https://youtu.be/B5wK4ucNQRk
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Checking Out Our Deployment
+Here: https://green-day-web.vercel.app/ (best in Chrome and Microsoft Edge)
+1. You are more than welcome to read our Landing Page for a brief introduction of our project!
+2. Click "Get Started" to come to the Home page
+3. Go to the Map to enter your location and search for trash cans or recycling businesses near you (you **DO NOT** have to log in to use the Map)
+   * For trash cans: we will display one picture within a marker of its location
+   * For recycling businesses: we will show all the details of the business to you, including all the information and its picture
+4. Log in with your Email or Google Account
+5. Add your own business in the Settings, including but not limited to business Name, Phone, Address, Recycling Types, and Time Availability
+6. Attach the best picture to show your business in the Gallery
+## Checking Out Our Codes
+1. Download the zip of this repository
+2. ```npm install``` or ```yarn install```
+3. Fill in all API keys in .env.local (currently this repository is private, so we kept the keys inside it to ease your testing)
+4. ```npm run dev``` or ```yarn dev```
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result
+## Reaching Us Out
+Contact us at nextchart.beachrock@gmail.com for anything!
