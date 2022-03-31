@@ -17,7 +17,7 @@ This project aims at making recycling faster and more convenient.
 The user can take a picture of a certain item and our Machine Learning Model will determine its recyclability and where to recycle it.  
 Our map takes in a collection of data from the Google Maps API and user-generated data by both our standard users and by businesses.
 
-## 🪧 Demo: https://youtu.be/fDI_Rpqul88
+## 🪧 Demo: https://youtu.be/L2lQazLPqOk
 
 ## 🌐 Web Deployment Details
 Here: https://green-day-web.vercel.app/ (best in Chrome and Microsoft Edge)
